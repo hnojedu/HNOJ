@@ -51,6 +51,7 @@ from judge.utils.views import DiggPaginatorMixin, QueryStringSortMixin, SingleOb
     add_file_response, generic_message
 from judge.views.blog import PostListBase
 from .contests import ContestRanking
+from django.template.loader import render_to_string
 
 __all__ = ['UserPage', 'UserAboutPage', 'UserProblemsPage', 'UserDownloadData', 'UserPrepareData',
            'users', 'edit_profile']
