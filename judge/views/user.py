@@ -24,6 +24,7 @@ from django.http import Http404, HttpResponseRedirect, JsonResponse, HttpRespons
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils import timezone
+from judge.tasks import import_users
 from django.utils.formats import date_format
 from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
