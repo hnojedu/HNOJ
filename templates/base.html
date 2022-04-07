@@ -29,7 +29,7 @@
     <meta name="msapplication-TileImage" content="/mstile-144x144.png">
     {# Chrome 39 for Android colour #}
     <meta name="theme-color" content="#231F20">
-    {% if og_image %}
+    <!-- {% if og_image %}
         <meta property="og:image" content="{{ request.build_absolute_uri(og_image) }}">
     {% else %}
         <meta property="og:image" content="{{ request.build_absolute_uri("/logo.png") }}">
@@ -37,7 +37,7 @@
     {% block og_title %}{% endblock %}
     <meta property="og:site_name" content="{{ SITE_LONG_NAME }}">
     <meta property="og:url"
-          content="{{ DMOJ_SCHEME }}://{{ DMOJ_CANONICAL|default(site.domain) }}{{ request.get_full_path() }}">
+          content="{{ DMOJ_SCHEME }}://{{ DMOJ_CANONICAL|default(site.domain) }}{{ request.get_full_path() }}"> -->
 
     <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -359,8 +359,8 @@
     <footer>
         <span id="footer-content">
             <br>
-            {{_('proudly powered by %(dmoj)s', dmoj=safe('<a style="color: #808080" href="https://dmoj.ca"><b>DMOJ</b></a>'))}} |
-            {{_('follow us on %(github)s and %(facebook)s', github=safe('<a style="color: #808080" href="https://github.com/VNOI-Admin/OJ"><b>Github</b></a>'), facebook=safe('<a style="color: #808080" href="https://www.facebook.com/vnoi.wiki"><b>Facebook</b></a>'))}}
+            {{_('proudly powered by %(dmoj)s', dmoj=safe('<a style="color: #808080" href="https://oj.vnoi.info/"><b>VNOJ</b></a>'))}} |
+            {{_('follow us on %(github)s', github=safe('<a style="color: #808080" href="https://github.com/hnojedu/OJ"><b>GitHub</b></a>'))}}
             {% if i18n_config.footer %}
                 {{ i18n_config.footer|safe }} |
             {% endif %}
