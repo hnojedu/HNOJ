@@ -41,3 +41,4 @@ tmp.sh
 *.sql
 fc_*
 local_urls.py
+.DS_Store
