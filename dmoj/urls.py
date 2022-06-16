@@ -449,11 +449,11 @@ urlpatterns = [
         path('progress', tasks.demo_progress),
     ])),
 
-    url(r'^import_users/', include([
-        url(r'^$', user.ImportUsersView.as_view(), name='import_users'),
-        url(r'post_file/$', user.import_users_post_file, name='import_users_post_file'),
-        url(r'submit/$', user.import_users_submit, name='import_users_submit'),
-        url(r'sample/$', user.sample_import_users, name='import_users_sample')
+    path('import_users/', include([
+        path('', user.ImportUsersView.as_view(), name='import_users'),
+        path('post_file/', user.import_users_post_file, name='import_users_post_file'),
+        path('submit/', user.import_users_submit, name='import_users_submit'),
+        path('sample/', user.sample_import_users, name='import_users_sample')
     ])),
 ]
 
