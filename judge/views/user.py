@@ -20,11 +20,11 @@ from django.db.models import Count, F, Max, Min, Prefetch
 from django.db.models.expressions import Value
 from django.db.models.fields import DateField
 from django.db.models.functions import Cast, Coalesce, ExtractYear
-from django.http import Http404, HttpResponseRedirect, JsonResponse, HttpResponseForbidden, HttpResponseBadRequest, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseForbidden, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
-from judge.tasks import import_users
 from django.utils.formats import date_format
 from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
@@ -38,6 +38,7 @@ from judge.forms import CustomAuthenticationForm, ProfileForm, UserBanForm, User
 from judge.models import BlogPost, BlogVote, Organization, Profile, Rating, Submission
 from judge.performance_points import get_pp_breakdown
 from judge.ratings import rating_class, rating_progress
+from judge.tasks import import_users
 from judge.tasks import prepare_user_data
 from judge.template_context import MiscConfigDict
 from judge.utils.celery import task_status_by_id, task_status_url_by_id
@@ -51,7 +52,6 @@ from judge.utils.views import DiggPaginatorMixin, QueryStringSortMixin, SingleOb
     add_file_response, generic_message
 from judge.views.blog import PostListBase
 from .contests import ContestRanking
-from django.template.loader import render_to_string
 
 __all__ = ['UserPage', 'UserAboutPage', 'UserProblemsPage', 'UserDownloadData', 'UserPrepareData',
            'users', 'edit_profile']
@@ -645,6 +645,7 @@ class CustomPasswordResetView(PasswordResetView):
 
         return super().post(request, *args, **kwargs)
 
+
 class ImportUsersView(TitleMixin, TemplateView):
     template_name = 'user/import/index.html'
     title = _('Import Users')
@@ -663,18 +664,18 @@ def import_users_post_file(request):
     if not users:
         return JsonResponse({
             'done': False,
-            'msg': 'No valid row found. Make sure row containing username.'
+            'msg': 'No valid row found. Make sure row containing username.',
         })
-    
+
     table_html = render_to_string('user/import/table_csv.html', {
-                    'data': users
-                })
+        'data': users,
+    })
     return JsonResponse({
         'done': True,
         'html': table_html,
-        'data': users
+        'data': users,
     })
-    
+
 
 def import_users_submit(request):
     import json
@@ -684,7 +685,7 @@ def import_users_submit(request):
     users = json.loads(request.body)['users']
     log = import_users.import_users(users)
     return JsonResponse({
-        'msg': log     
+        'msg': log,
     })
 
 

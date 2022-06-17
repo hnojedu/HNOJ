@@ -453,7 +453,7 @@ urlpatterns = [
         path('', user.ImportUsersView.as_view(), name='import_users'),
         path('post_file/', user.import_users_post_file, name='import_users_post_file'),
         path('submit/', user.import_users_submit, name='import_users_submit'),
-        path('sample/', user.sample_import_users, name='import_users_sample')
+        path('sample/', user.sample_import_users, name='import_users_sample'),
     ])),
 ]
 
