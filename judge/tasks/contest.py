@@ -113,6 +113,9 @@ def prepare_contest_data(self, contest_id, options):
 
     length = len(submissions)
     with Progress(self, length, stage=_('Preparing contest data')) as p:
+        if hasattr(settings, 'DMOJ_CONTEST_DATA_CACHE'):
+            os.makedirs(settings.DMOJ_CONTEST_DATA_CACHE, exist_ok=True)
+
         data_file = zipfile.ZipFile(os.path.join(settings.DMOJ_CONTEST_DATA_CACHE, '%s.zip' % contest_id), mode='w')
         exported = set()
         for user_id, username, problem, source, ext, sub_id, file_only in submissions:
