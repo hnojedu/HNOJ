@@ -5261,6 +5261,10 @@ msgstr ""
 msgid "Download as CSV"
 msgstr ""
 
+#: templates/contest/ranking.html:415
+msgid "Total score only"
+msgstr ""
+
 #: templates/contest/ranking.html:421
 #, python-format
 msgid ""

@@ -159,6 +159,12 @@
                             $('.personal-info').show();
                             $('#show-personal-info-checkbox').prop('checked', true);
                         }
+                        {% if tab == 'ranking' %}
+                            if (localStorage.getItem('show-total-score-only') == 'true') {
+                                $('.problem-points-col').hide();
+                                $('#show-total-score-checkbox').prop('checked', true);
+                            }
+                        {% endif %}
                         window.firstSolve();
                         window.totalAC();
                     }).always(function () {
@@ -312,6 +318,16 @@
                     parser.searchParams.set('show_virtual', '{{ 'false' if show_virtual else 'true' }}');
                     window.location.href = parser.href;
                 });
+
+                $('#show-total-score-checkbox').click(function () {
+                    $('.problem-points-col').toggle();
+                    localStorage.setItem('show-total-score-only', $('.problem-points-col').is(':visible') ? 'false' : 'true');
+                });
+
+                if (localStorage.getItem('show-total-score-only') == 'true') {
+                    $('.problem-points-col').hide();
+                    $('#show-total-score-checkbox').prop('checked', true);
+                }
             {% endif %}
         });
 
@@ -407,6 +423,8 @@
             <label for="show-personal-info-checkbox" style="vertical-align: bottom">{{ _('Show full name/organization') }}</label>
         {% endif %}
         {% if tab == 'ranking' %}
+            <input id="show-total-score-checkbox" type="checkbox" style="vertical-align: bottom">
+            <label for="show-total-score-checkbox" style="vertical-align: bottom">{{ _('Total score only') }}</label>
             <input id="show-virtual-participations-checkbox" type="checkbox" style="vertical-align: bottom">
             <label for="show-virtual-participations-checkbox" style="vertical-align: bottom">{{ _('Show virtual participations') }}</label>
             {% if not is_ICPC_format %}

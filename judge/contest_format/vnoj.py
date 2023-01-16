@@ -98,8 +98,8 @@ class VNOJContestFormat(DefaultContestFormat):
                 dt = (time - participation.start).total_seconds()
                 # An IE can have a submission result of `None`
                 problem_subs = participation.submissions.exclude(submission__result__isnull=True) \
-                                            .exclude(submission__result__in=['IE', 'CE']) \
-                                            .filter(problem_id=prob)
+                                                        .exclude(submission__result__in=['IE', 'CE']) \
+                                                        .filter(problem_id=prob)
 
                 # Compute penalty
                 if self.config['penalty']:
@@ -163,8 +163,11 @@ class VNOJContestFormat(DefaultContestFormat):
         participation.format_data = format_data
         participation.save()
 
-    def display_user_problem(self, participation, contest_problem, frozen=False):
+    def display_user_problem(self, participation, contest_problem, frozen=False, html_class=None):
         format_data = (participation.format_data or {}).get(str(contest_problem.id))
+
+        if not html_class:
+            html_class = ''
 
         if format_data:
             # This prefix is used to help get the correct data from the format_data dictionary
@@ -207,9 +210,10 @@ class VNOJContestFormat(DefaultContestFormat):
                     points = points + '?'
 
             return format_html(
-                '<td class="{state}"><a href="{url}"><div>{points}{penalty}{pending}</div>'
-                '<div class="solving-time">{time}</div></a></td>',
+                ('<td class="{state} {html_class}"><a href="{url}"><div>{points}{penalty}{pending}</div>'
+                 '<div class="solving-time">{time}</div></a></td>'),
                 state=state,
+                html_class=html_class,
                 url=url,
                 points=points,
                 penalty=penalty,
@@ -217,7 +221,7 @@ class VNOJContestFormat(DefaultContestFormat):
                 pending=pending,
             )
         else:
-            return mark_safe('<td></td>')
+            return format_html('<td class="{html_class}"></td>', html_class=html_class)
 
     def display_participation_result(self, participation, frozen=False):
         if frozen:

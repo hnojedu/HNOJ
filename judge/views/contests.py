@@ -704,9 +704,14 @@ def make_contest_ranking_profile(contest, participation, contest_problems, froze
         # When the contest format is changed, `format_data` might be invalid.
         # This will cause `display_user_problem` to error, so we display '???' instead.
         try:
-            return contest.format.display_user_problem(participation, contest_problem, frozen)
+            return contest.format.display_user_problem(
+                participation,
+                contest_problem,
+                frozen,
+                html_class='problem-points-col',
+            )
         except (KeyError, TypeError, ValueError):
-            return mark_safe('<td>???</td>')
+            return mark_safe('<td class="problem-points-col">???</td>')
 
     user = participation.user
     return ContestRankingProfile(

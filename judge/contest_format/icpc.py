@@ -144,15 +144,19 @@ class ICPCContestFormat(DefaultContestFormat):
         participation.format_data = format_data
         participation.save()
 
-    def display_user_problem(self, participation, contest_problem, frozen=False):
+    def display_user_problem(self, participation, contest_problem, frozen=False, html_class=None):
         format_data = (participation.format_data or {}).get(str(contest_problem.id))
+
+        if not html_class:
+            html_class = ''
+
         if format_data:
             # This prefix is used to help get the correct data from the format_data dictionary
             prefix = 'frozen_' if frozen else ''
             submissions_count = format_data[prefix + 'tries']
 
             if submissions_count == 0:
-                return mark_safe('<td></td>')
+                return format_html('<td class="{html_class}"></td>', html_class=html_class)
 
             tries = format_html(
                 '{tries} {msg}',
@@ -169,24 +173,26 @@ class ICPCContestFormat(DefaultContestFormat):
 
             if not format_data[prefix + 'points']:
                 return format_html(
-                    '<td class="{state}"><a href="{url}">{tries}</a></td>',
+                    '<td class="{state} {html_class}"><a href="{url}">{tries}</a></td>',
                     state=state,
+                    html_class=html_class,
                     url=url,
                     tries=tries,
                 )
 
             return format_html(
-                ('<td class="{state}">'
+                ('<td class="{state} {html_class}">'
                  '<a href="{url}"><div class="solving-time-minute">{minute}</div>'
                  '<div class="solving-time">{time}</div>{tries}</a></td>'),
                 state=state,
+                html_class=html_class,
                 url=url,
                 tries=tries,
                 minute=int(format_data['time'] // 60),
                 time=nice_repr(timedelta(seconds=format_data['time']), 'noday'),
             )
         else:
-            return mark_safe('<td></td>')
+            return format_html('<td class="{html_class}"></td>', html_class=html_class)
 
     def display_participation_result(self, participation, frozen=False):
         if frozen:

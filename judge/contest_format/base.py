@@ -48,7 +48,7 @@ class BaseContestFormat(metaclass=ABCMeta):
         raise NotImplementedError()
 
     @abstractmethod
-    def display_user_problem(self, participation, contest_problem, frozen=False):
+    def display_user_problem(self, participation, contest_problem, frozen=False, html_class=None):
         """
         Returns the HTML fragment to show a user's performance on an individual problem. This is expected to use
         information from the format_data field instead of computing it from scratch.
