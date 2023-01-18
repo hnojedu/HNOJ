@@ -5262,7 +5262,7 @@ msgid "Download as CSV"
 msgstr ""
 
 #: templates/contest/ranking.html:415
-msgid "Total score only"
+msgid "Show total score only"
 msgstr ""
 
 #: templates/contest/ranking.html:421
@@ -5302,6 +5302,10 @@ msgstr ""
 
 #: templates/contest/ranking.html:454
 msgid "Untried"
+msgstr ""
+
+#: templates/contest/ranking.html:496
+msgid "Move total score to the front"
 msgstr ""
 
 #: templates/contest/stats.html:38

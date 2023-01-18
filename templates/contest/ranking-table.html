@@ -66,6 +66,8 @@
 {% endblock %}
 
 {% block before_point_head %}
+    <td style="display: none;"></td>
+    <td class="points-front-col" style="display: none;"></td>
     {% for problem in problems %}
         <th class="points header problem-points-col"><a href="{{ url('problem_detail', problem.problem.code) }}">
             {{- contest.get_label_for_problem(loop.index0) }}
@@ -75,6 +77,14 @@
             <div class="problem-code" style="display: none;">{{ problem.problem.code }}</div>
         </a></th>
     {% endfor %}
+    <td class="points-back-col" style="display: none;"></td>
+{% endblock %}
+
+{% block point_head %}
+    {% if sort_links %}<a href="{{ sort_links.performance_points }}">{% endif %}
+        {{ _('Points') }}
+    {%- if sort_links %}{{ sort_order.performance_points }}</a>{% endif %}
+    <td style="display: none;"></td>
 {% endblock %}
 
 {% block row_extra %}
@@ -84,21 +94,29 @@
 {% endblock %}
 
 {% block before_point %}
+    <td style="display: none;"></td>
+    <td class="points-front-col" style="display: none;"></td>
     {% for cell in user.problem_cells %}
         {{ cell }}
     {% endfor %}
+    <td class="points-back-col" style="display: none;"></td>
 {% endblock %}
 
 {% block point %}
     {{ user.result_cell }}
+    <td style="display: none;"></td>
 {% endblock %}
 
 {% block after_user_list %}
     <tr>
         <td colspan=2>Total AC</td>
+        <td style="display: none;"></td>
+        <td class="points-front-col" style="display: none;"></td>
         {% for problem in problems %}
             <td class="total-ac problem-points-col" id='{{- contest.get_label_for_problem(loop.index0) }}-total'>0</td>
         {% endfor %}
-        <td colspan=2></td>
+        <td class="points-back-col" style="display: none;"></td>
+        <td></td>
+        <td style="display: none;"></td>
     </tr>
 {% endblock %}

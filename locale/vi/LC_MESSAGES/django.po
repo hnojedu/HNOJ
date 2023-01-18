@@ -5368,7 +5368,7 @@ msgid "Download as CSV"
 msgstr "Tải bảng xếp hạng dưới dạng CSV"
 
 #: templates/contest/ranking.html:415
-msgid "Total score only"
+msgid "Show total score only"
 msgstr "Chỉ hiện tổng điểm"
 
 #: templates/contest/ranking.html:420
@@ -5414,6 +5414,10 @@ msgstr "Đã thử, đang chấm"
 #: templates/contest/ranking.html:453
 msgid "Untried"
 msgstr "Chưa thử"
+
+#: templates/contest/ranking.html:496
+msgid "Move total score to the front"
+msgstr "Đẩy tổng điểm lên trước"
 
 #: templates/contest/stats.html:37
 msgid "Problem Status Distribution"

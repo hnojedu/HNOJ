@@ -164,6 +164,13 @@
                                 $('.problem-points-col').hide();
                                 $('#show-total-score-checkbox').prop('checked', true);
                             }
+                            if (localStorage.getItem('total-score-to-front') == 'true') {
+                                let front_arr = $('table#users-table tr .points-front-col');
+                                $('table#users-table tr .points-back-col').next(':visible').each(function (index, element) {
+                                    $(element).insertBefore(front_arr.eq(index));
+                                });
+                                $('#total-score-to-front-checkbox').prop('checked', true);
+                            }
                         {% endif %}
                         window.firstSolve();
                         window.totalAC();
@@ -328,6 +335,30 @@
                     $('.problem-points-col').hide();
                     $('#show-total-score-checkbox').prop('checked', true);
                 }
+
+                $('#total-score-to-front-checkbox').click(function () {
+                    let front_arr = $('table#users-table tr .points-front-col');
+                    let back_arr = $('table#users-table tr .points-back-col');
+                    if ($(this).prop('checked')) {
+                        back_arr.next(':visible').each(function (index, element) {
+                            $(element).insertBefore(front_arr.eq(index));
+                        });
+                        localStorage.setItem('total-score-to-front', 'true');
+                    } else {
+                        front_arr.prev(':visible').each(function (index, element) {
+                            $(element).insertAfter(back_arr.eq(index));
+                        });
+                        localStorage.setItem('total-score-to-front', 'false');
+                    }
+                });
+
+                if (localStorage.getItem('total-score-to-front') == 'true') {
+                    let front_arr = $('table#users-table tr .points-front-col');
+                    $('table#users-table tr .points-back-col').next(':visible').each(function (index, element) {
+                        $(element).insertBefore(front_arr.eq(index));
+                    });
+                    $('#total-score-to-front-checkbox').prop('checked', true);
+                }
             {% endif %}
         });
 
@@ -424,7 +455,9 @@
         {% endif %}
         {% if tab == 'ranking' %}
             <input id="show-total-score-checkbox" type="checkbox" style="vertical-align: bottom">
-            <label for="show-total-score-checkbox" style="vertical-align: bottom">{{ _('Total score only') }}</label>
+            <label for="show-total-score-checkbox" style="vertical-align: bottom">{{ _('Show total score only') }}</label>
+            <input id="total-score-to-front-checkbox" type="checkbox" style="vertical-align: bottom">
+            <label for="total-score-to-front-checkbox" style="vertical-align: bottom">{{ _('Move total score to the front') }}</label>
             <input id="show-virtual-participations-checkbox" type="checkbox" style="vertical-align: bottom">
             <label for="show-virtual-participations-checkbox" style="vertical-align: bottom">{{ _('Show virtual participations') }}</label>
             {% if not is_ICPC_format %}
