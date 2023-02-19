@@ -4548,8 +4548,8 @@ msgstr "dựa trên nền tảng %(dmoj)s"
 
 #: templates/base.html:355
 #, python-format
-msgid "follow us on %(github)s and %(facebook)s"
-msgstr "theo dõi VNOI trên %(github)s và %(facebook)s"
+msgid "follow us on %(github)s"
+msgstr "theo dõi HNOJ trên %(github)s"
 
 #: templates/blog/blog-list-tabs.html:4
 msgid "Newsfeed"
