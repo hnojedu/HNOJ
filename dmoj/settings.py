@@ -375,7 +375,7 @@ else:
     }
 
 INSTALLED_APPS += (
-    'django.contrib.admin',
+    'dmoj.apps.JudgeAdminConfig',
     'judge',
     'django.contrib.auth',
     'django.contrib.contenttypes',
