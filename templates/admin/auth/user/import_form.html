@@ -6,11 +6,22 @@
 {{ media }}
 {% endblock %}
 
-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">{% endblock %}
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">
+    <style>
+        .import-field {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 100%;
+        }
+    </style>
+{% endblock %}
 
-{#{% block coltype %}colM{% endblock %}#}
+{% block coltype %}colM{% endblock %}
 
-{#{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-form{% endblock %}#}
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-form{% endblock %}
 
 {% block breadcrumbs %}
     <div class="breadcrumbs">
@@ -34,96 +45,62 @@
             </div></div>
         </fieldset>
     </form>
-    <form method="post">
-        {% csrf_token %}
-        <input type='hidden' name='action' value='import-form'>
-        {{ import_form.non_field_errors }}
-        {{ import_form.management_form }}
-        <fieldset class="module aligned">
-            <h2>Preview</h2>
-            <div class="form-row"><div>
-                <input type="submit" value="Press here to submit" onclick="return confirm('Are you sure?')">
-            </div></div>
-            <div class="form-row"><div>
-            <table style="width: 100%">
-                <thead>
-                    {% for form in import_form|slice:':1' %}
-                        <tr>
-                            {% for field in form %}<th>{{ field.label }}</th>{% endfor %}
-                        </tr>
-                    {% endfor %}
-                </thead>
-                <tbody>
-                    {% for form in import_form %}
-                        <tr>
-                            {% for field in form %}<td>{{ field.as_hidden }}{{ field.value }}</td>{% endfor %}
-                        </tr>
-                    {% endfor %}
-                </tbody>
-                <tfoot>
-                    {% for form in import_form|slice:':1' %}
-                        <tr>
-                            {% for field in form %}<th>{{ field.label }}</th>{% endfor %}
-                        </tr>
-                    {% endfor %}
-                </tfoot>
-            </table>
-            </div></div>
-        </fieldset>
-    </form>
-
-{#<form {% if has_file_field %}enctype="multipart/form-data" {% endif %}{% if form_url %}action="{{ form_url }}" {% endif %}method="post" id="{{ opts.model_name }}_form" novalidate>{% csrf_token %}{% block form_top %}{% endblock %}#}
-{#<div>#}
-{#{% if is_popup %}<input type="hidden" name="{{ is_popup_var }}" value="1">{% endif %}#}
-{#{% if to_field %}<input type="hidden" name="{{ to_field_var }}" value="{{ to_field }}">{% endif %}#}
-{#{% if save_on_top %}{% block submit_buttons_top %}{% submit_row %}{% endblock %}{% endif %}#}
-{#{% if errors %}#}
-{#    <p class="errornote">#}
-{#    {% if errors|length == 1 %}{% translate "Please correct the error below." %}{% else %}{% translate "Please correct the errors below." %}{% endif %}#}
-{#    </p>#}
-{#    {{ adminform.form.non_field_errors }}#}
-{#{% endif %}#}
-{##}
-{#{% block field_sets %}#}
-{#{% for fieldset in adminform %}#}
-{#  {% include "admin/includes/fieldset.html" %}#}
-{#{% endfor %}#}
-{#{% endblock %}#}
-{##}
-{#{% block after_field_sets %}{% endblock %}#}
-{##}
-{#{% block inline_field_sets %}#}
-{#{% for inline_admin_formset in inline_admin_formsets %}#}
-{#    {% include inline_admin_formset.opts.template %}#}
-{#{% endfor %}#}
-{#{% endblock %}#}
-{##}
-{#{% block after_related_objects %}{% endblock %}#}
-{##}
-{#{% block submit_buttons_bottom %}{% submit_row %}{% endblock %}#}
-{##}
-{#{% block admin_change_form_document_ready %}#}
-{#    <script id="django-admin-form-add-constants"#}
-{#            src="{% static 'admin/js/change_form.js' %}"#}
-{#            {% if adminform and add %}#}
-{#                data-model-name="{{ opts.model_name }}"#}
-{#            {% endif %}#}
-{#            async>#}
-{#    </script>#}
+    {% if import_form.forms %}
+        <form method="post">
+            {% csrf_token %}
+            <input type='hidden' name='action' value='import-form'>
+            {% if import_form.errors %}
+                <p class="errornote">
+                {% if errors|length == 1 %}{% translate "Please correct the error below." %}{% else %}{% translate "Please correct the errors below." %}{% endif %}
+                </p>
+                {{ import_form.form.non_field_errors }}
+            {% endif %}
+            {{ import_form.management_form }}
+            <fieldset class="module">
+                <h2>Preview</h2>
+                <div class="form-row"><div>
+                <table>
+                    <thead>
+                        {% for form in import_form|slice:':1' %}
+                            <tr>
+                                {% for field in form %}<th>{{ field.label }}</th>{% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </thead>
+                    <tbody>
+                        {% for form in import_form %}
+                            <tr>
+                                {% for field in form %}
+                                    <td>
+                                        <input type="text" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default_if_none:'' }}" class="import-field" aria-label="{{ field.label }}"/>
+                                        {{ field.errors }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        {% for form in import_form|slice:':1' %}
+                            <tr>
+                                {% for field in form %}<th>{{ field.label }}</th>{% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tfoot>
+                </table>
+                </div></div>
+            </fieldset>
+            <div id="bottombar">
+                <button title="{% trans 'Save' %}" type="submit" name="_save" onclick="return confirm('Are you sure?')">
+                    <i class="fa fa-lg fa-floppy-o"></i>
+                    <i class="fa fa-caret-right"></i>
+                    {% if is_popup %}
+                        <i class="fa fa-lg fa-times"></i>
+                    {% else %}
+                        <i class="fa fa-lg fa-list-alt"></i>
+                    {% endif %}
+                    <span class="text">{% trans 'Save' %}</span>
+                </button>
+            </div>
+        </form>
+    {% endif %}
 {% endblock %}
-{##}
-{# JavaScript for prepopulated fields #}
-{#{% prepopulated_fields_js %}#}
-{##}
-{#</div>#}
-{#</form></div>#}
-{#{% endblock %}#}
-
-
-{#{% extends "admin/change_form.html" %}#}
-{#{% load i18n admin_urls %}#}
-
-{##}
-{#{% block content %}#}
-{#    {{ csv_form }}#}
-{#{% endblock %}#}

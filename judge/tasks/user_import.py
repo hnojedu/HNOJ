@@ -31,6 +31,8 @@ class CsvForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
+        if 'file' not in cleaned_data:
+            return cleaned_data
         try:
             # with open(cleaned_data['file'], newline='') as csvfile:
             reader = csv.DictReader([line.decode() for line in cleaned_data['file']], delimiter=',')
@@ -50,8 +52,8 @@ class CsvForm(forms.Form):
 
 
 class ImportForm(forms.Form):
-    username = forms.CharField(label=_('Username'), required=False)
-    password = forms.CharField(label=_('Password'), required=False)
+    username = forms.CharField(label=_('Username'))
+    password = forms.CharField(label=_('Password'))
     name = forms.CharField(label=_('Name'), required=False)
     school = forms.CharField(label=_('School'), required=False)
     email = forms.CharField(label=_('Email'), required=False)
@@ -153,7 +155,7 @@ class SampleUserCsvView(View):
 class UserImportView(ContextMixin, TemplateResponseMixin, ProcessFormView):
     csv_form_class = CsvForm
     import_form_class = ImportForm
-    import_formset_class = formset_factory(import_form_class)
+    import_formset_class = formset_factory(import_form_class, extra=0)
     template_name = 'admin/auth/user/import_form.html'
     action_keyword = 'action'
     csv_form_action = 'csv-form'
@@ -170,8 +172,8 @@ class UserImportView(ContextMixin, TemplateResponseMixin, ProcessFormView):
 
             return self.render_to_response(self.get_context_data(
                 csv_form=csv_form,
-                import_form=self.import_formset_class(initial=self.import_form_initial,
-            )))
+                import_form=self.import_formset_class(initial=self.import_form_initial)
+            ))
         elif action == self.import_form_action:
             import_form = self.get_import_form()
             if import_form.is_valid():
@@ -180,7 +182,10 @@ class UserImportView(ContextMixin, TemplateResponseMixin, ProcessFormView):
                     log += ('%d. ' % index) + form.commit()
                 return JsonResponse({'msg': log})
             else:
-                return self.render_to_response(self.get_context_data(import_form=import_form))
+                return self.render_to_response(self.get_context_data(
+                    csv_form=self.csv_form_class(data_field=self.csv_form_data_field),
+                    import_form=import_form
+                ))
 
         return self.render_to_response(self.get_context_data())
 
