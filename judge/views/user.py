@@ -20,8 +20,9 @@ from django.db.models import Count, F, Max, Min, Prefetch
 from django.db.models.expressions import Value
 from django.db.models.fields import DateField
 from django.db.models.functions import Cast, Coalesce, ExtractYear
-from django.http import Http404, HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import Http404, HttpResponse, HttpResponseForbidden, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.formats import date_format
@@ -37,6 +38,7 @@ from judge.forms import CustomAuthenticationForm, ProfileForm, UserBanForm, User
 from judge.models import BlogPost, BlogVote, Organization, Profile, Rating, Submission
 from judge.performance_points import get_pp_breakdown
 from judge.ratings import rating_class, rating_progress
+from judge.tasks import import_users
 from judge.tasks import prepare_user_data
 from judge.template_context import MiscConfigDict
 from judge.utils.celery import task_status_by_id, task_status_url_by_id
@@ -642,3 +644,56 @@ class CustomPasswordResetView(PasswordResetView):
         }
 
         return super().post(request, *args, **kwargs)
+
+
+class ImportUsersView(TitleMixin, TemplateView):
+    template_name = 'user/import/index.html'
+    title = _('Import Users')
+
+    def get(self, *args, **kwargs):
+        if self.request.user.is_superuser:
+            return super().get(self, *args, **kwargs)
+        return HttpResponseForbidden()
+
+
+def import_users_post_file(request):
+    if not request.user.is_superuser or request.method != 'POST':
+        return HttpResponseForbidden()
+    users = import_users.csv_to_dict(request.FILES['csv_file'])
+
+    if not users:
+        return JsonResponse({
+            'done': False,
+            'msg': 'No valid row found. Make sure row containing username.',
+        })
+
+    table_html = render_to_string('user/import/table_csv.html', {
+        'data': users,
+    })
+    return JsonResponse({
+        'done': True,
+        'html': table_html,
+        'data': users,
+    })
+
+
+def import_users_submit(request):
+    import json
+    if not request.user.is_superuser or request.method != 'POST':
+        return HttpResponseForbidden()
+
+    users = json.loads(request.body)['users']
+    log = import_users.import_users(users)
+    return JsonResponse({
+        'msg': log,
+    })
+
+
+def sample_import_users(request):
+    if not request.user.is_superuser or request.method != 'GET':
+        return HttpResponseForbidden()
+    filename = 'import_sample.csv'
+    content = ','.join(import_users.fields) + '\n' + ','.join(import_users.descriptions)
+    response = HttpResponse(content, content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename={0}'.format(filename)
+    return response

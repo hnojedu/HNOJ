@@ -448,6 +448,13 @@ urlpatterns = [
         path('failure', tasks.demo_failure),
         path('progress', tasks.demo_progress),
     ])),
+
+    path('import_users/', include([
+        path('', user.ImportUsersView.as_view(), name='import_users'),
+        path('post_file/', user.import_users_post_file, name='import_users_post_file'),
+        path('submit/', user.import_users_submit, name='import_users_submit'),
+        path('sample/', user.sample_import_users, name='import_users_sample'),
+    ])),
 ]
 
 favicon_paths = ['apple-touch-icon-180x180.png', 'apple-touch-icon-114x114.png', 'android-chrome-72x72.png',
