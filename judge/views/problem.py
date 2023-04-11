@@ -671,13 +671,13 @@ class ProblemSubmit(LoginRequiredMixin, ProblemMixin, TitleMixin, SingleObjectFo
 
             submission_file = form.files.get('submission_file', None)
             if submission_file is not None:
-                if self.new_submission.language.key == 'SCRATCH':
-                    try:
-                        archive = zipfile.ZipFile(submission_file.file)
-                        submission_file.file = archive.open('project.json')
-                        submission_file.name = 'dummy.json'
-                    except (zipfile.BadZipFile, KeyError):
-                        pass
+                # if self.new_submission.language.key == 'SCRATCH':
+                #     try:
+                #         archive = zipfile.ZipFile(submission_file.file)
+                #         submission_file.file = archive.open('project.json')
+                #         submission_file.name = 'dummy.json'
+                #     except (zipfile.BadZipFile, KeyError):
+                #         pass
 
                 source_url = submission_uploader(
                     submission_file=submission_file,
