@@ -6,3 +6,12 @@
 	path = resources/libs
 	url = https://github.com/DMOJ/site-assets.git
 	branch = master
+[submodule "resources/vnoj/ace"]
+	path = resources/vnoj/ace
+	url = https://github.com/ajaxorg/ace-builds.git
+[submodule "resources/vnoj/mathjax"]
+	path = resources/vnoj/mathjax
+	url = https://github.com/mathjax/MathJax.git
+[submodule "resources/vnoj/select2"]
+	path = resources/vnoj/select2
+	url = https://github.com/select2/select2.git
