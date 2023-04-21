@@ -36,7 +36,7 @@ $(function () {
                                 success: function () {
                                     $.ajax({
                                         type: 'GET',
-                                        url: '/static/vnoj/mathjax/3.2.0/es5/tex-chtml.min.js',
+                                        url: '/static/vnoj/mathjax/es5/tex-chtml.js',
                                         dataType: 'script',
                                         cache: true,
                                         success: function () {
