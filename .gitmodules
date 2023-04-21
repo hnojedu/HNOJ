@@ -15,3 +15,6 @@
 [submodule "resources/vnoj/select2"]
 	path = resources/vnoj/select2
 	url = https://github.com/select2/select2.git
+[submodule "resources/vnoj/font-awesome"]
+	path = resources/vnoj/font-awesome
+	url = https://github.com/FortAwesome/Font-Awesome.git
