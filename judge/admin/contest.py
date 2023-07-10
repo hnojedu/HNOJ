@@ -35,7 +35,7 @@ class ContestTagForm(ModelForm):
 
 
 class ContestTagAdmin(admin.ModelAdmin):
-    fields = ('name', 'color', 'description', 'contests')
+    fields = ('slug', 'name', 'color', 'description', 'contests')
     list_display = ('name', 'color')
     actions_on_top = True
     actions_on_bottom = True

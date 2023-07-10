@@ -1094,7 +1094,6 @@ class ContestMossDelete(ContestMossMixin, SingleObjectMixin, View):
 
 class ContestTagDetailAjax(DetailView):
     model = ContestTag
-    slug_field = slug_url_kwarg = 'name'
     context_object_name = 'tag'
     template_name = 'contest/tag-ajax.html'
 
@@ -1103,7 +1102,38 @@ class ContestTagDetail(TitleMixin, ContestTagDetailAjax):
     template_name = 'contest/tag.html'
 
     def get_title(self):
-        return _('Contest tag: %s') % self.object.name
+        return _(self.object.name)
+
+
+class ContestListByTag(ContestList):
+    slug_url_kwarg = 'slug'
+    slug_field = 'slug'
+    template_name = 'contest/list-by-tag.html'
+
+    def get_object(self, queryset=None):
+        if queryset is None:
+            queryset = ContestTag.objects.all()
+        slug = self.kwargs.get(self.slug_url_kwarg)
+        if slug is not None:
+            queryset = queryset.filter(**{self.slug_field: slug})
+        else:
+            raise ImproperlyConfigured('ContestTagDetail requires tag name')
+        return queryset.get()
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().get(request, *args, **kwargs)
+
+    def _get_queryset(self):
+        return super()._get_queryset().filter(tags__in=[self.object])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag'] = self.object
+        return context
+
+    def get_title(self):
+        return _(self.object.name)
 
 
 class CreateContest(PermissionRequiredMixin, TitleMixin, CreateView):
