@@ -225,6 +225,7 @@ urlpatterns = [
     path('contests/new', contests.CreateContest.as_view(), name='contest_new'),
     path('contests/tag/<slug:slug>', include([
         path('', contests.ContestTagDetail.as_view(), name='contest_tag'),
+        path('/', lambda _, slug: HttpResponsePermanentRedirect(reverse('contest_tag', args=[slug]))),
         path('/ajax', contests.ContestTagDetailAjax.as_view(), name='contest_tag_ajax'),
         path('/list', paged_list_view(contests.ContestListByTag, name='contest_list_by_tag')),
     ])),
