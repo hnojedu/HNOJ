@@ -1,0 +1,15 @@
+{% extends "tabs-base.html" %}
+
+{% block tabs %}
+    {% if hide_private_contests is defined and hide_private_contests is not none %}
+        <div style="padding: 0.75em 1em 0.75em 0;">
+            <input id="hide-private-contests-checkbox" type="checkbox">
+            <label for="hide-private-contests-checkbox">{{ _('Hide private contests') }}</label>
+        </div>
+    {% endif %}
+    {{ make_tab('detail', 'fa-info-circle', url('contest_tag', tag.slug), _('Info')) }}
+    {{ make_tab('list', 'fa-list', url('contest_list_by_tag', tag.slug), _('List')) }}
+    {% if request.user.is_staff and (perms.judge.edit_all_contest or perms.judge.edit_own_contest) %}
+        {{ make_tab('admin', 'fa-edit', url('admin:judge_contesttag_change', tag.id), _('Edit')) }}
+    {% endif %}
+{% endblock %}

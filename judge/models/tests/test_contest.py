@@ -837,10 +837,12 @@ class ContestTagTestCase(TestCase):
     @classmethod
     def setUpTestData(self):
         self.basic_tag = ContestTag.objects.create(
+            slug='basic-tag',
             name='basic',
             color='#fff',
         )
         self.dark_tag = ContestTag.objects.create(
+            slug='dark-tag',
             name='dark',
             color='#010001',
         )
