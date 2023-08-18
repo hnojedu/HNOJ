@@ -34,8 +34,10 @@ class MinValueOrNoneValidator(MinValueValidator):
 class ContestTag(models.Model):
     color_validator = RegexValidator('^#(?:[A-Fa-f0-9]{3}){1,2}$', _('Invalid colour.'))
 
-    name = models.CharField(max_length=20, verbose_name=_('tag name'), unique=True,
-                            validators=[RegexValidator(r'^[a-z-]+$', message=_('Lowercase letters and hyphens only.'))])
+    slug = models.SlugField(max_length=20, verbose_name=_('tag slug'), unique=True,
+                            help_text=_('Tag name shown in URLs.'))
+    name = models.CharField(max_length=128, verbose_name=_('tag title'))
+
     color = models.CharField(max_length=7, verbose_name=_('tag colour'), validators=[color_validator])
     description = models.TextField(verbose_name=_('tag description'), blank=True)
 
@@ -43,7 +45,7 @@ class ContestTag(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('contest_tag', args=[self.name])
+        return reverse('contest_tag', args=[self.slug])
 
     @property
     def text_color(self, cache={}):
