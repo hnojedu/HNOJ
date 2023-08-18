@@ -20,7 +20,8 @@ def apply_submission_filter(queryset, id_range, languages, results):
     if results:
         queryset = queryset.filter(result__in=results)
     queryset = queryset.exclude(locked_after__lt=timezone.now()) \
-                       .exclude(status__in=Submission.IN_PROGRESS_GRADING_STATUS)
+                       .exclude(status__in=Submission.IN_PROGRESS_GRADING_STATUS) \
+                       .exclude(is_virtual_judged=True)
     return queryset
 
 

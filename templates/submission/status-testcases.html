@@ -32,7 +32,9 @@
         <h4>{{ _('Your submission is being processed...') }}</h4>
     {% elif submission.status == 'CE' %}
         <h3>{{ _('Compilation Error') }}</h3>
+        {% if not submission.problem.virtual_judge %}
         <pre>{{ submission.error|ansi2html }}</pre>
+        {% endif %}
     {% else %}
         {% if submission.error %}
             <h3>{{ _('Compilation Warnings') }}</h3>
@@ -46,7 +48,7 @@
         {% endif %}
         <br>
         {% if can_view_testcase_status or can_view_batch_status %}
-        {% if statuses or not submission.is_graded %}
+        {% if statuses or not submission.is_graded or (submission.problem.virtual_judge and submission.is_graded) %}
             {% for case in statuses %}
                 {% if case.status == "AC" %}
                     <span class="fa fa-check case-AC"></span>
@@ -61,6 +63,14 @@
                     <sup class="case-{{ case.status }}">&times;{{ case.num_combined }}</sup>
                 {% endif %}
             {% endfor %}
+            {% if submission.problem.virtual_judge %}
+                {{ submission.result }}
+                {% if submission.result == "AC" %}
+                    <span class="fa fa-check case-AC"></span>
+                {% else %}
+                    <span class="fa fa-times case-{{ submission.result }} case-bad"></span>
+                {% endif %}
+            {% endif %}
             {% if not submission.is_graded %}
                 <span class="fa fa-spinner fa-pulse"></span>
             {% endif %}
