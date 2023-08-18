@@ -4,11 +4,15 @@ import socket
 import struct
 import zlib
 
+import requests
 from django.conf import settings
+from django.db.models.functions import Random
 from django.utils import timezone
 
 from judge import event_poster as event
 from judge.judge_priority import BATCH_REJUDGE_PRIORITY, CONTEST_SUBMISSION_PRIORITY, DEFAULT_PRIORITY, REJUDGE_PRIORITY
+from judge.virtual_judge_utils import sign
+from .models.virtual_judge import VirtualJudge
 
 logger = logging.getLogger('judge.judgeapi')
 size_pack = struct.Struct('!I')
@@ -53,6 +57,23 @@ def judge_request(packet, reply=True):
         return result
 
 
+def virtual_judge(submission):
+    judge = VirtualJudge.objects.order_by(Random()).first()
+
+    data = {
+        'submission': submission.id,
+        'source': submission.source.source,
+        'problem_code': submission.problem.virtual_judge,
+        'language': submission.language.key,
+    }
+
+    data = sign(data, settings.VIRTUAL_JUDGE_KEY)
+
+    response = requests.post(judge.url, json=data)
+
+    return response
+
+
 def judge_submission(submission, rejudge=False, batch_rejudge=False, judge_id=None):
     from .models import ContestSubmission, Submission, SubmissionTestCase
 
@@ -91,16 +112,34 @@ def judge_submission(submission, rejudge=False, batch_rejudge=False, judge_id=No
             banned_judges = list(participation.contest.banned_judges.values_list('name', flat=True))
 
     try:
-        response = judge_request({
-            'name': 'submission-request',
-            'submission-id': submission.id,
-            'problem-id': submission.problem.code,
-            'language': submission.language.key,
-            'source': submission.source.source,
-            'judge-id': judge_id,
-            'banned-judges': banned_judges,
-            'priority': BATCH_REJUDGE_PRIORITY if batch_rejudge else (REJUDGE_PRIORITY if rejudge else priority),
-        })
+        if submission.problem.virtual_judge is None:
+            response = judge_request(
+                {
+                    'name': 'submission-request',
+                    'submission-id': submission.id,
+                    'problem-id': submission.problem.code,
+                    'language': submission.language.key,
+                    'source': submission.source.source,
+                    'judge-id': judge_id,
+                    'banned-judges': banned_judges,
+                    'priority': BATCH_REJUDGE_PRIORITY
+                    if batch_rejudge
+                    else (REJUDGE_PRIORITY if rejudge else priority),
+                },
+            )
+        else:
+            response = virtual_judge(submission)
+            if response.status_code == 200:
+                response = {
+                    'name': 'submission-received',
+                    'submission-id': submission.id,
+                }
+            else:
+                response = {
+                    'name': 'error',
+                    'submission-id': 'error',
+                }
+
     except BaseException:
         logger.exception('Failed to send request to judge')
         Submission.objects.filter(id=submission.id).update(status='IE', result='IE')

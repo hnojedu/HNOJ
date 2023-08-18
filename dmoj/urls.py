@@ -17,7 +17,7 @@ from judge.feed import AtomBlogFeed, AtomCommentFeed, AtomProblemFeed, BlogFeed,
 from judge.sitemap import sitemaps
 from judge.views import TitledTemplateView, api, blog, comment, contests, language, license, mailgun, organization, \
     preview, problem, problem_manage, ranked_submission, register, stats, status, submission, tag, tasks, ticket, \
-    two_factor, user, widgets
+    two_factor, user, virtual_judge, widgets
 from judge.views.problem_data import ProblemDataView, ProblemSubmissionDiff, \
     problem_data_file, problem_init_view
 from judge.views.register import ActivationView, RegistrationView
@@ -153,6 +153,8 @@ urlpatterns = [
                  name='problem_submissions_rescore_success'),
         ])),
     ])),
+
+    path('update_submission', virtual_judge.update_submission, name='update_submission'),
 
     path('tags', include([
         path('/', tag.TagProblemList.as_view(), name='tagproblem_list'),

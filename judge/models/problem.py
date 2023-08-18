@@ -210,6 +210,8 @@ class Problem(models.Model):
                                                        choices=PROBLEM_TESTCASE_RESULT_ACCESS,
                                                        help_text=_('What testcase result should be showed to users?'))
 
+    virtual_judge = models.CharField(max_length=32, blank=True, null=True)
+
     objects = TranslatedProblemQuerySet.as_manager()
     tickets = GenericRelation('Ticket')
 
