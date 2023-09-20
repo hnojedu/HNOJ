@@ -53,7 +53,7 @@ def import_users(users):
         })
 
         profile, _ = Profile.objects.get_or_create(user=user, defaults={
-            'language': Language.get_python3(),
+            'language': Language.objects.get(key=settings.DEFAULT_USER_LANGUAGE),
             'timezone': settings.DEFAULT_USER_TIME_ZONE,
         })
 
