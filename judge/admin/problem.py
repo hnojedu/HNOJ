@@ -238,3 +238,9 @@ class ProblemAdmin(NoBatchDeleteMixin, VersionAdmin):
         if form.cleaned_data.get('change_message'):
             return form.cleaned_data['change_message']
         return super(ProblemAdmin, self).construct_change_message(request, form, *args, **kwargs)
+
+    def get_changeform_initial_data(self, request):
+        initial = super().get_changeform_initial_data(request)
+        # Add request.profile to the list of curators
+        initial['curators'] = request.profile
+        return initial

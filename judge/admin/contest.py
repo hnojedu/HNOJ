@@ -357,6 +357,12 @@ class ContestAdmin(NoBatchDeleteMixin, VersionAdmin):
         ).distinct()
         return form
 
+    def get_changeform_initial_data(self, request):
+        initial = super().get_changeform_initial_data(request)
+        # Add request.profile to the list of authors
+        initial['authors'] = request.profile
+        return initial
+
 
 class ContestParticipationForm(ModelForm):
     class Meta:
