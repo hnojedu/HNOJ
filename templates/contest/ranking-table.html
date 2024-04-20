@@ -45,11 +45,7 @@
 {% endblock %}
 
 {% block personal_info_data scoped %}
-    {% if user.organization %}
-        <span class="organization"><a href="{{ user.organization.get_absolute_url() }}">
-            {{- user.organization.short_name -}}
-        </a></span>
-    {% endif %}
+    <span class="affiliation">{{- user.affiliation -}}</span>
 {% endblock %}
 
 {% block after_point_head %}

@@ -72,7 +72,7 @@ def import_users(users):
             user.first_name = row['name']
 
         if 'school' in row.keys() and row['school']:
-            user.last_name = row['school']
+            profile.affiliation = row['school']
 
         if row['organizations']:
             orgs = row['organizations'].split('&')

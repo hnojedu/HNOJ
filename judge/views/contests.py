@@ -818,7 +818,7 @@ class ContestStats(TitleMixin, ContestMixin, DetailView):
 
 ContestRankingProfile = namedtuple(
     'ContestRankingProfile',
-    'id user css_class username points cumtime tiebreaker organization participation '
+    'id user css_class username points cumtime tiebreaker affiliation participation '
     'participation_rating problem_cells result_cell virtual display_name',
 )
 
@@ -843,7 +843,7 @@ def make_contest_ranking_profile(contest, participation, contest_problems, first
         points=participation.score if not frozen else participation.frozen_score,
         cumtime=participation.cumtime if not frozen else participation.frozen_cumtime,
         tiebreaker=participation.tiebreaker if not frozen else participation.frozen_tiebreaker,
-        organization=user.organization,
+        affiliation=user.affiliation,
         participation_rating=participation.rating.rating if hasattr(participation, 'rating') else None,
         problem_cells=[display_user_problem(contest_problem) for contest_problem in contest_problems],
         result_cell=contest.format.display_participation_result(participation, frozen),
