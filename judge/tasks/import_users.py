@@ -15,7 +15,7 @@ descriptions = ['my_username(edit old one if exist)',
 
 
 def csv_to_dict(csv_file):
-    rows = csv.reader(csv_file.read().decode().split('\n'))
+    rows = csv.reader(csv_file.read().decode('utf-8-sig').split('\n'))
     header = next(rows)
     header = [i.lower() for i in header]
 
