@@ -358,7 +358,7 @@ class ProblemSubmitForm(ModelForm):
                 raise forms.ValidationError(_('File size is too big! Maximum file size is %s')
                                             % filesizeformat(max_file_size))
 
-            if lang_obj.key == 'SCRATCH':
+            if not settings.HNOJ_SUBMISSION_FILE_PRESERVED_MODE and lang_obj.key == 'SCRATCH':
                 try:
                     archive = zipfile.ZipFile(content.file)
                     info = archive.getinfo('project.json')

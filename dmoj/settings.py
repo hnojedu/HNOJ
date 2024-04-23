@@ -102,6 +102,9 @@ VNOJ_TAG_PROBLEM_MIN_RATING = 1900  # Minimum rating to be able to tag a problem
 # has about 5~6 fields, so we need to raise this
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 3000
 
+# Prevent optimizations from modifying file-only submissions
+HNOJ_SUBMISSION_FILE_PRESERVED_MODE = False
+
 # List of online judge preset for OJ API
 OJ_PROBLEM_PRESET = [
     {
