@@ -16,14 +16,14 @@ from martor.views import markdown_search_user
 from judge.feed import AtomBlogFeed, AtomCommentFeed, AtomProblemFeed, BlogFeed, CommentFeed, ProblemFeed
 from judge.sitemap import sitemaps
 from judge.views import TitledTemplateView, api, blog, comment, contests, language, license, mailgun, organization, \
-    preview, problem, problem_manage, ranked_submission, register, stats, status, submission, tag, tasks, ticket, \
+    preview, problem, problem_manage, ranked_submission, register, stats, status, submission, tasks, ticket, \
     two_factor, user, widgets
 from judge.views.problem_data import ProblemDataView, ProblemSubmissionDiff, \
     problem_data_file, problem_init_view
 from judge.views.register import ActivationView, RegistrationView
 from judge.views.select2 import AssigneeSelect2View, CommentSelect2View, ContestSelect2View, \
     ContestUserSearchSelect2View, OrganizationSelect2View, OrganizationUserSelect2View, ProblemSelect2View, \
-    TagGroupSelect2View, TagSelect2View, TicketUserSelect2View, UserSearchSelect2View, UserSelect2View
+    TicketUserSelect2View, UserSearchSelect2View, UserSelect2View
 from judge.views.widgets import martor_image_uploader
 
 admin.autodiscover()
@@ -152,19 +152,6 @@ urlpatterns = [
             path('/rescore/success/<slug:task_id>', problem_manage.rescore_success,
                  name='problem_submissions_rescore_success'),
         ])),
-    ])),
-
-    path('tags', include([
-        path('/', tag.TagProblemList.as_view(), name='tagproblem_list'),
-        path('/create', tag.TagProblemCreate.as_view(), name='tagproblem_create'),
-        path('/random/', tag.TagRandomProblem.as_view(), name='tagproblem_random'),
-        path('/find', tag.TagFindProblem.as_view(), name='tagproblem_find'),
-    ])),
-
-    path('tag/<str:tagproblem>', include([
-        path('', tag.TagProblemDetail.as_view(), name='tagproblem_detail'),
-        path('/assign', tag.TagProblemAssign.as_view(), name='tagproblem_assign'),
-        path('/', lambda _, problem: HttpResponsePermanentRedirect(reverse('tagproblem_detail', args=[tag]))),
     ])),
 
     path('submissions/', paged_list_view(submission.AllSubmissions, 'all_submissions')),
@@ -416,8 +403,6 @@ urlpatterns = [
         path('problem/', ProblemSelect2View.as_view(), name='problem_select2'),
         path('contest/', ContestSelect2View.as_view(), name='contest_select2'),
         path('comment/', CommentSelect2View.as_view(), name='comment_select2'),
-        path('tag/', TagSelect2View.as_view(), name='tag_select2'),
-        path('taggroup/', TagGroupSelect2View.as_view(), name='taggroup_select2'),
     ])),
 
     path('tasks/', include([

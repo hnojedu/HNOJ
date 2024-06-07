@@ -155,9 +155,6 @@ class Profile(models.Model):
                                       default=False)
     ban_reason = models.TextField(null=True, blank=True,
                                   help_text=_('Show to banned user in login page.'))
-    allow_tagging = models.BooleanField(verbose_name=_('Allow tagging'),
-                                        help_text=_('User will be allowed to tag problems.'),
-                                        default=True)
     rating = models.IntegerField(null=True, default=None)
     user_script = models.TextField(verbose_name=_('user script'), default='', blank=True, max_length=65536,
                                    help_text=_('User-defined JavaScript for site customization.'))
@@ -215,15 +212,6 @@ class Profile(models.Model):
     @cached_property
     def is_new_user(self):
         return not self.user.is_staff and not self.has_enough_solves
-
-    @cached_property
-    def can_tag_problems(self):
-        if self.allow_tagging:
-            if self.user.has_perm('judge.add_tagproblem'):
-                return True
-            if self.rating is not None and self.rating >= settings.VNOJ_TAG_PROBLEM_MIN_RATING:
-                return True
-        return False
 
     @cached_property
     def resolved_ace_theme(self):

@@ -96,8 +96,6 @@ VNOJ_BLOG_MIN_PROBLEM_COUNT = 10
 
 VNOJ_TESTCASE_VISIBLE_LENGTH = 60
 
-VNOJ_TAG_PROBLEM_MIN_RATING = 1900  # Minimum rating to be able to tag a problem
-
 # Some problems have a lot of testcases, and each testcase
 # has about 5~6 fields, so we need to raise this
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 3000
@@ -159,8 +157,6 @@ DISCORD_WEBHOOK = {
     'on_new_comment': None,
     'on_new_problem': None,
     'on_new_suggested_problem': None,
-    'on_new_tag_problem': None,
-    'on_new_tag': None,
     'on_new_blogpost': None,
     'on_error': None,
 }
@@ -307,14 +303,6 @@ else:
                         'judge.ProblemGroup',
                         'judge.ProblemType',
                         'judge.License',
-                    ],
-                },
-                {
-                    'model': 'judge.TagProblem',
-                    'icon': 'fa-tag',
-                    'children': [
-                        'judge.TagGroup',
-                        'judge.Tag',
                     ],
                 },
                 ('judge.Submission', 'fa-check-square-o'),

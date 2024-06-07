@@ -12,7 +12,6 @@ from judge.models.problem_data import CHECKERS, ProblemData, ProblemTestCase, pr
 from judge.models.profile import Badge, Organization, OrganizationRequest, Profile, WebAuthnCredential
 from judge.models.runtime import Judge, Language, RuntimeVersion
 from judge.models.submission import SUBMISSION_RESULT, Submission, SubmissionSource, SubmissionTestCase
-from judge.models.tag import Tag, TagData, TagGroup, TagProblem
 from judge.models.ticket import GeneralIssue, Ticket, TicketMessage
 
 revisions.register(Profile, exclude=['points', 'last_access', 'ip', 'rating'])
@@ -26,6 +25,4 @@ revisions.register(Solution)
 revisions.register(Judge, fields=['name', 'created', 'auth_key', 'description'])
 revisions.register(Language)
 revisions.register(Comment, fields=['author', 'time', 'page', 'score', 'body', 'hidden', 'parent'])
-revisions.register(TagProblem)
-revisions.register(TagData, follow=['problem'])
 del revisions

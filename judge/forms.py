@@ -22,7 +22,7 @@ from django.utils.translation import gettext_lazy as _, ngettext_lazy
 
 from django_ace import AceWidget
 from judge.models import BlogPost, Contest, ContestAnnouncement, ContestProblem, Language, LanguageLimit, \
-    Organization, Problem, Profile, Solution, Submission, Tag, WebAuthnCredential
+    Organization, Problem, Profile, Solution, Submission, WebAuthnCredential
 from judge.utils.subscription import newsletter_id
 from judge.widgets import HeavyPreviewPageDownWidget, HeavySelect2MultipleWidget, HeavySelect2Widget, MartorWidget, \
     Select2MultipleWidget, Select2Widget
@@ -385,30 +385,6 @@ class ProblemSubmitForm(ModelForm):
     class Meta:
         model = Submission
         fields = ['language']
-
-
-class TagProblemCreateForm(Form):
-    problem_url = forms.URLField(max_length=200,
-                                 label=_('Problem URL'),
-                                 help_text=_('Full URL to the problem, '
-                                             'e.g. https://oj.vnoi.info/problem/post'),
-                                 widget=forms.TextInput(attrs={'style': 'width:100%'}))
-
-    def __init__(self, problem_url=None, *args, **kwargs):
-        super(TagProblemCreateForm, self).__init__(*args, **kwargs)
-        if problem_url is not None:
-            self.fields['problem_url'].required = True
-            self.fields['problem_url'].initial = problem_url
-
-
-class TagProblemAssignForm(Form):
-    def get_choices():
-        return list(map(attrgetter('code', 'name'), Tag.objects.all()))
-
-    tags = MultipleChoiceField(
-        required=True,
-        choices=get_choices,
-    )
 
 
 class OrganizationForm(ModelForm):
