@@ -15,7 +15,7 @@ from judge.bridge.base_handler import ZlibPacketHandler, proxy_list
 from judge.caching import finished_submission
 from judge.models import Judge, Language, LanguageLimit, Problem, Profile, \
     RuntimeVersion, Submission, SubmissionTestCase
-from judge.utils.url import get_absolute_submission_file_url
+from judge.utils.url import get_absolute_url
 
 logger = logging.getLogger('judge.bridge')
 json_log = logging.getLogger('judge.json.bridge')
@@ -30,6 +30,10 @@ SubmissionData = namedtuple(
 
 def _ensure_connection():
     db.connection.close_if_unusable_or_obsolete()
+
+
+def get_absolute_submission_file_url(source):
+    return get_absolute_url(source, settings.JUDGE_SITE_FULL_URL)
 
 
 class JudgeHandler(ZlibPacketHandler):

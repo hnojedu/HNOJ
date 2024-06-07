@@ -15,9 +15,5 @@ def get_absolute_url(url, host):
         return urllib.parse.urljoin(host, url)
 
 
-def get_absolute_submission_file_url(source):
-    return get_absolute_url(source, settings.SITE_FULL_URL)
-
-
 def get_absolute_pdf_url(pdf_url):
     return get_absolute_url(pdf_url, settings.SITE_FULL_URL)
