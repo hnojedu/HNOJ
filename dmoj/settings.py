@@ -103,52 +103,6 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 3000
 # Prevent optimizations from modifying file-only submissions
 HNOJ_SUBMISSION_FILE_PRESERVED_MODE = False
 
-# List of online judge preset for OJ API
-OJ_PROBLEM_PRESET = [
-    {
-        'regex': r'^https://codeforces\.com/problemset/problem/(?P<contestid>\w+)/(?P<index>\w+)$',
-        'codename': 'CF_%s_%s',
-        'judge': 'Codeforces',
-    },
-    {
-        'regex': r'^https://codeforces\.com/contest/(?P<contestid>\w+)/problem/(?P<index>\w+)$',
-        'codename': 'CF_%s_%s',
-        'judge': 'Codeforces',
-    },
-    {
-        'regex': r'^^https://atcoder.jp/contests/(?:\w*)/tasks/(?P<codename>\w+)$',
-        'codename': 'AC_%s',
-        'judge': 'Atcoder',
-    },
-    {
-        'regex': r'^https://oj\.vnoi\.info/problem/(?P<codename>\w+)$',
-        'codename': 'VNOJ_%s',
-        'judge': 'VNOJ',
-    },
-    {
-        'regex': r'^https://open\.kattis\.com/problems/(?P<codename>\w+)$',
-        'codename': 'KATTIS_%s',
-        'judge': 'Kattis',
-    },
-    {
-        'regex': r'^https://codeforces\.com/gym/(?P<contestid>\w+)/problem/(?P<index>\w+)$',
-        'codename': 'CFGYM_%s_%s',
-        'judge': 'CodeforcesGym',
-    },
-]
-
-OJ_LIST = [
-    ('Atcoder', 'Atcoder'),
-    ('Codeforces', 'Codeforces'),
-    ('CodeforcesGym', 'Codeforces (Gym)'),
-    ('Kattis', 'Kattis'),
-    ('VNOJ', 'VNOJ'),
-]
-
-OJ_REQUESTS_TIMEOUT = 5  # in seconds
-
-OJAPI_CACHE_TIMEOUT = 3600  # Cache timeout for OJAPI data
-
 # Urls of discord webhook.
 # https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks
 DISCORD_WEBHOOK = {
