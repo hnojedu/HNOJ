@@ -63,7 +63,7 @@ class CustomRegistrationForm(RegistrationForm):
         return self.cleaned_data['organizations']
 
 
-class RegistrationView(OldRegistrationView):
+class RegistrationMixin:
     title = _('Register')
     form_class = CustomRegistrationForm
     template_name = 'registration/registration_form.html'
@@ -74,7 +74,7 @@ class RegistrationView(OldRegistrationView):
         kwargs['TIMEZONE_MAP'] = settings.TIMEZONE_MAP
         kwargs['password_validators'] = get_default_password_validators()
         kwargs['tos_url'] = settings.TERMS_OF_SERVICE_URL
-        return super(RegistrationView, self).get_context_data(**kwargs)
+        return super(RegistrationMixin, self).get_context_data(**kwargs)
 
     @transaction.atomic
     def register(self, form):
@@ -84,7 +84,7 @@ class RegistrationView(OldRegistrationView):
         # (sending emails can cause error, resulting in an unclean database)
         # See https://github.com/macropin/django-registration/blob/v2.9/registration/models.py#L188-L193
 
-        user = super(RegistrationView, self).register(form)
+        user = super(RegistrationMixin, self).register(form)
         profile, _ = Profile.objects.get_or_create(user=user, defaults={
             'language': Language.get_default_language(),
         })
@@ -103,10 +103,14 @@ class RegistrationView(OldRegistrationView):
         return user
 
     def get_initial(self, *args, **kwargs):
-        initial = super(RegistrationView, self).get_initial(*args, **kwargs)
+        initial = super(RegistrationMixin, self).get_initial(*args, **kwargs)
         initial['timezone'] = settings.DEFAULT_USER_TIME_ZONE
         initial['language'] = Language.objects.get(key=settings.DEFAULT_USER_LANGUAGE)
         return initial
+
+
+class RegistrationView(RegistrationMixin, OldRegistrationView):
+    pass
 
 
 class ActivationView(OldActivationView):
