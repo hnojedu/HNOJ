@@ -58,7 +58,8 @@ class BlogPostForm(ModelForm):
             # self.fields['authors'] does not exist when the user has only view permission on the model.
             self.fields['authors'].widget.can_add_related = False
 
-        self.fields['organization'].widget.can_add_related = False
+        if 'organization' in self.fields:
+            self.fields['organization'].widget.can_add_related = False
 
     class Meta:
         widgets = {
