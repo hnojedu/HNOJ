@@ -72,7 +72,7 @@
 input {
     &[type=text], &[type=password], &[type=email], &[type=number], &[type=url] {
         padding: 4px 8px;
-        color: $color_primary75;
+        color: $color_primary90;
         background: $color_primary0 none;
         border: 1px solid $color_primary25;
         border-radius: $widget_border_radius;
@@ -205,7 +205,7 @@ textarea:focus {
     }
 
     h2 {
-        color: $color_primary75;
+        color: $color_primary90;
     }
 
     > ul {
