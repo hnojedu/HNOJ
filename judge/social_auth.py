@@ -6,16 +6,17 @@ from urllib.parse import quote
 from django import forms
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from django.urls import reverse
-from django.utils.translation import gettext, gettext_lazy as _
-from registration.backends.simple.views import RegistrationView as SimpleRegistrationView
 from requests import HTTPError
+from reversion import revisions
 from social_core.backends.github import GithubOAuth2
 from social_core.exceptions import InvalidEmail, SocialAuthBaseException
 from social_core.pipeline.partial import partial
 from social_django.middleware import SocialAuthExceptionMiddleware as OldSocialAuthExceptionMiddleware
 
-from judge.views.register import CustomRegistrationForm, RegistrationMixin
+from judge.forms import ProfileForm
+from judge.models import Language, Profile
 
 logger = logging.getLogger('judge.social_auth')
 
@@ -51,38 +52,53 @@ def verify_email(backend, details, *args, **kwargs):
         raise InvalidEmail(backend)
 
 
-class SocialAuthRegistrationForm(CustomRegistrationForm):
-    def clean_email(self):
-        # This check is not required
-        if User.objects.filter(email=self.cleaned_data['email']).exists():
-            raise forms.ValidationError(gettext('The email address "%s" is already taken. Only one registration '
-                                                'is allowed per address.') % self.cleaned_data['email'])
-        return self.cleaned_data['email']
+class UsernameForm(forms.Form):
+    username = forms.RegexField(regex=r'^\w+$', max_length=30, label='Username',
+                                error_messages={'invalid': 'A username must contain letters, numbers, or underscores.'})
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Prevent the user from changing the email field
-        self.fields['email'].disabled = True
-
-
-class SocialAuthRegistrationView(RegistrationMixin, SimpleRegistrationView):
-    title = _('Setup your account')
-    form_class = SocialAuthRegistrationForm
-    associated_email = ''
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.initial['email'] = self.associated_email
-
-    def form_valid(self, form):
-        return {'id_new': True, 'user': self.register(form)}
+    def clean_username(self):
+        if User.objects.filter(username=self.cleaned_data['username']).exists():
+            raise forms.ValidationError('Sorry, the username is taken.')
+        return self.cleaned_data['username']
 
 
 @partial
-def make_user(backend, details, user, *args, **kwargs):
-    if user:
-        return {'id_new': False}
-    return SocialAuthRegistrationView.as_view(associated_email=details['email'])(request=backend.strategy.request)
+def choose_username(backend, user, username=None, *args, **kwargs):
+    if not user:
+        request = backend.strategy.request
+        if request.POST:
+            form = UsernameForm(request.POST)
+            if form.is_valid():
+                return {'username': form.cleaned_data['username']}
+        else:
+            form = UsernameForm(initial={'username': username})
+        return render(request, 'registration/username_select.html', {
+            'title': 'Choose a username', 'form': form,
+        })
+
+
+@partial
+def make_profile(backend, user, response, is_new=False, *args, **kwargs):
+    if is_new:
+        if not hasattr(user, 'profile'):
+            profile = Profile(user=user)
+            profile.language = Language.get_default_language()
+            logger.info('Info from %s: %s', backend.name, response)
+            profile.save()
+            form = ProfileForm(instance=profile, user=user)
+        else:
+            data = backend.strategy.request_data()
+            logger.info(data)
+            form = ProfileForm(data, instance=user.profile, user=user)
+            if form.is_valid():
+                with revisions.create_revision(atomic=True):
+                    form.save()
+                    revisions.set_user(user)
+                    revisions.set_comment('Updated on registration')
+                    return
+        return render(backend.strategy.request, 'registration/profile_creation.html', {
+            'title': 'Create your profile', 'form': form,
+        })
 
 
 class SocialAuthExceptionMiddleware(OldSocialAuthExceptionMiddleware):
