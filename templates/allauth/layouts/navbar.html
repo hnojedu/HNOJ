@@ -1,0 +1,13 @@
+{% for node in tree %}
+    <li>
+        <a href="{{ node.path }}" class="nav-{{ node.key }}{% if node.key in nav_tab %} active{% endif %}">
+            {% trans node.label %}
+            {% if not node.is_leaf_node %}
+                <div class="nav-expand">&gt;</div>
+            {% endif %}
+        </a>
+        {% with children=node.get_children %}
+            {% if children %}<ul>{% include "allauth/layouts/navbar.html" with tree=children %}</ul>{% endif %}
+        {% endwith %}
+    </li>
+{% endfor %}
