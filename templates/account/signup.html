@@ -1,0 +1,66 @@
+{% extends "account/base.html" %}
+
+{% block content_title %}{{ _('Signup') }}{% endblock %}
+
+{% block body %}
+    <div class="auth-flow-form">
+        {% if not SOCIALACCOUNT_ONLY %}
+            <form action="" method="post" class="form-area">
+                {% if form.non_field_errors() %}
+                    <div id="form-errors" style="max-width: fit-content;">
+                        {% for error in form.non_field_errors() %}
+                            <p class="error">{{error}}</p>
+                        {% endfor %}
+                        {% if form.errors and misc_config.discord_invite_link and misc_config.discord_invite_shieldio %}
+                        {{ _('If you have problems with your account, feel free to shoot us a message at: ') }}<a href="{{ misc_config.discord_invite_link }}"><img src="{{ misc_config.discord_invite_shieldio }}"></a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                {% csrf_token %}
+                <table border="0" style="text-align:left">
+                    {% if form['username'].errors %}
+                        <tr><td colspan="2">{{ form['username'].errors }}</td></tr>
+                    {% endif %}
+                    <tr>
+                        <th><i class="fa fa-user fa-fw"></i>
+                        </th>
+                        <td>{{ form['username'] }}
+                        </td>
+                    </tr>
+                    {% if form['email'].errors %}
+                        <tr><td colspan="2">{{ form['email'].errors }}</td></tr>
+                    {% endif %}
+                    <tr>
+                        <th><i class="fa fa-envelope fa-fw"></i>
+                        </th>
+                        <td>{{ form['email'] }}
+                        </td>
+                    </tr>
+                    {% if form['password1'].errors %}
+                        <tr><th colspan="2" class="form-field-error">{{ form['password1'].errors }}</th></tr>
+                    {% endif %}
+                    <tr>
+                        <th><i class="fa fa-key fa-fw"></i>
+                        </th>
+                        <td>{{ form['password1'] }}
+                        </td>
+                    </tr>
+                    {% if form['password2'].errors %}
+                        <tr><th colspan="2" class="form-field-error">{{ form['password2'].errors }}</th></tr>
+                    {% endif %}
+                    <tr>
+                        <th><i class="fa fa-key fa-fw"></i>
+                        </th>
+                        <td>{{ form['password2'] }}
+                        </td>
+                    </tr>
+                </table>
+                <hr>
+                <button style="float:right;" type="submit">{{ _('Signup!') }}</button>
+            </form>
+        {% endif %}
+        {% if SOCIALACCOUNT_ENABLED %}
+            {% include "socialaccount/snippets/login.html" %}
+        {% endif %}
+    </div>
+{% endblock %}

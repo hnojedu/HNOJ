@@ -1,0 +1,77 @@
+{% extends "account/base.html" %}
+
+{% block media %}
+    <style>
+        h4 {
+            padding-top: 1em;
+        }
+
+        .social {
+            display: inline;
+            font-size: 2.3em;
+            float: none;
+        }
+
+        .google-icon i {
+            color: #DD4B38;
+        }
+
+        .facebook-icon i {
+            color: #133783;
+        }
+
+        .github-icon i {
+            color: black;
+        }
+    </style>
+{% endblock %}
+
+{% block content_title %}{{ _('Login') }}{% endblock %}
+
+{% macro make_provider(name, provider_id, href) %}
+    <li>
+        <a title="{{ name }}" href="{{ href }}">{{ name }}</a>
+    </li>
+{% endmacro %}
+
+{% block body %}
+    <div class="auth-flow-form">
+        {% if not SOCIALACCOUNT_ONLY %}
+            <form action="" method="post" class="form-area">
+                {% if form.errors %}
+                    <div id="form-errors" style="max-width: fit-content;">
+                        {% for error in form.non_field_errors() %}
+                            <p class="error">{{error}}</p>
+                        {% endfor %}
+                        {% if form.errors and misc_config.discord_invite_link and misc_config.discord_invite_shieldio %}
+                        {{ _('If you have problems with your account, feel free to shoot us a message at: ') }}<a href="{{ misc_config.discord_invite_link }}"><img src="{{ misc_config.discord_invite_shieldio }}"></a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                {% csrf_token %}
+                <table border="0" style="text-align:left">
+                    <tr>
+                        <th><i class="fa fa-user fa-fw"></i>
+                        </th>
+                        <td>{{ form['login'] }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><i class="fa fa-key fa-fw"></i>
+                        </th>
+                        <td>{{ form['password'] }}
+                        </td>
+                    </tr>
+                </table>
+                {{ form['remember'] }}
+                {{ form['remember'].label }}
+                <hr>
+                <button style="float:right;" type="submit">{{ _('Login!') }}</button>
+            </form>
+            <a href="{{ url('account_reset_password') }}">{{ _('Forgot your password?') }}</a>
+        {% endif %}
+        {% if SOCIALACCOUNT_ENABLED %}
+            {% include "socialaccount/snippets/login.html" %}
+        {% endif %}
+    </div>
+{% endblock %}

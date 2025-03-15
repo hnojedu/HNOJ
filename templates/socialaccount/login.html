@@ -1,0 +1,26 @@
+{% extends "account/base.html" %}
+
+
+{% block content_title %}
+    {% if process == "connect" %}
+        {% with provider=provider %}Connect {{ provider }}{% endwith %}
+    {% else %}
+        {% with provider=provider %}Login via {{ provider }}{% endwith %}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    {% if process == "connect" %}
+        <p>
+            {% with provider=provider %}You are about to connect a new third-party account from {{ provider }}.{% endwith %}
+        </p>
+    {% else %}
+        <p>
+            {% with provider=provider.name %}You are about to sign in using a third-party account from {{ provider }}.{% endwith %}
+        </p>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">{{ _('Continue') }}</button>
+    </form>
+{% endblock body %}

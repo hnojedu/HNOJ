@@ -104,7 +104,8 @@ urlpatterns = [
     path('500/', exception),
     path('admin/', admin.site.urls),
     path('i18n/', include('django.conf.urls.i18n')),
-    path('accounts/', include(register_patterns)),
+    # path('accounts/', include(register_patterns)),
+    path('accounts/', include('allauth.urls')),
     path('', include('social_django.urls')),
 
     path('problems', include([

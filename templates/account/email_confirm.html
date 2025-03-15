@@ -1,0 +1,34 @@
+{% extends "account/base.html" %}
+
+{% block content_title %}
+    {{ _('Confirm email address') }}
+{% endblock %}
+
+{% block body %}
+    {% if confirmation %}
+        {% if can_confirm %}
+            <p>
+                {% with email=confirmation.email_address.email %}
+                    Please confirm that <a href="mailto:{{ email }}">{{ email }}</a> is an email address for user {{ confirmation.email_address.user.username }}.
+                {% endwith %}
+            </p>
+            {% with action_url=url('account_confirm_email', confirmation.key) %}
+                <form method="post" action="{{ action_url }}">
+                    {% csrf_token %}
+                    {{ redirect_field }}
+                    <button type="submit">{{ _('Confirm') }}</button>
+                </form>
+            {% endwith %}
+        {% else %}
+            <p>
+            Unable to confirm {{ email }} because it is already confirmed by a different account.
+            </p>
+        {% endif %}
+    {% else %}
+        {% with email_url=url('account_email') %}
+            <p>
+            This email confirmation link expired or is invalid. Please <a href="{{ email_url }}">issue a new email confirmation request</a>.
+            </p>
+        {% endwith %}
+    {% endif %}
+{% endblock %}

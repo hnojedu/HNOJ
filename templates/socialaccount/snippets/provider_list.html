@@ -1,0 +1,24 @@
+{% macro make_provider(name, provider_id, href) %}
+    <li>
+        <a title="{{ name }}" href="{{ href }}">{{ name }}</a>
+    </li>
+{% endmacro %}
+
+{% with socialaccount_providers=get_providers() %}
+    {% if socialaccount_providers %}
+        <ul>
+        {% for provider in socialaccount_providers %}
+            {% if provider.id == "openid" %}
+                {% for brand in provider.get_brands %}
+                    {% with href=provider_login_url(provider, openid=brand.openid_url, process=process) %}
+                        {{ make_provider(name=brand.name, provider_id=provider.id, href=href) }}
+                    {% endwith %}
+                {% endfor %}
+            {% endif %}
+            {% with href=provider_login_url(provider, process=process, scope=scope, auth_params=auth_params) %}
+                {{ make_provider(name=provider.name, provider_id=provider.id, href=href) }}
+            {% endwith %}
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}

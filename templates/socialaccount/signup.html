@@ -1,0 +1,30 @@
+{% extends "account/base.html" %}
+
+{% block content_title %}{{ _('Signup') }}{% endblock %}
+
+{% block body %}
+    <div>
+        <p>{{ _('You are about to use your %(provider_name)s account to login to
+            %(site_name)s. As a final step, please complete the following form:', provider_name=account.get_provider().name, site_name=site.name) }}</p>
+        {% with action_url=url('socialaccount_signup') %}
+            <form action="{{ action_url }}" method="post" class="form-area">
+                {% if form.non_field_errors() %}
+                    <div id="form-errors" style="max-width: fit-content;">
+                        {% for error in form.non_field_errors() %}
+                            <p class="error">{{ error }}</p>
+                        {% endfor %}
+                        {% if form.errors and misc_config.discord_invite_link and misc_config.discord_invite_shieldio %}
+                            {{ _('If you have problems with your account, feel free to shoot us a message at: ') }}
+                            <a href="{{ misc_config.discord_invite_link }}"><img
+                                    src="{{ misc_config.discord_invite_shieldio }}"></a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                {% csrf_token %}
+                <table class="django-as-table">{{ form.as_table() }}</table>
+                <hr>
+                <button style="float:right;" type="submit">{{ _('Signup!') }}</button>
+            </form>
+        {% endwith %}
+    </div>
+{% endblock %}

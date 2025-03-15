@@ -1,0 +1,7 @@
+{% block js_media %}
+    {% include "leave-warning.html" %}
+{% endblock %}
+
+<div class="alert alert-warning alert-dismissable">
+    <strong>{{ _('Note') }}:</strong> You are already logged in as {{ request.user.username }}.
+</div>
