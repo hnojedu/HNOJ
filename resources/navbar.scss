@@ -11,7 +11,7 @@
     min-height: 100%;
     align-items: center;
     white-space: nowrap;
-    background-color: #2e5895;
+    //background-color: #2e5895;
     border-top-left-radius: 6px;
     border-bottom-left-radius: 6px;
 
@@ -78,7 +78,7 @@
 }
 
 #nav-container {
-    background: #4899d2;    // menu bar background
+    background: #2e5895;    // menu bar background
 
     // opacity: 0.77
     // filter: alpha(opacity=77)
@@ -119,6 +119,7 @@ nav {
                 text-decoration: none;
                 vertical-align: middle;
                 color: #eee;    // texts in menu bar
+                font-weight: normal;
                 padding: 14px 7px;
                 height: 20px;
                 display: inline-table;
