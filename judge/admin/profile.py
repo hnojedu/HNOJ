@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 from django.forms import ModelForm
 from django.urls import reverse_lazy
 from django.utils.html import format_html
@@ -6,7 +8,7 @@ from django.utils.translation import gettext, gettext_lazy as _, ngettext
 from reversion.admin import VersionAdmin
 
 from django_ace import AceWidget
-from judge.models import Profile, WebAuthnCredential
+from judge.models import Profile, WebAuthnCredential, Language
 from judge.utils.views import NoBatchDeleteMixin
 from judge.widgets import AdminMartorWidget, AdminSelect2MultipleWidget, AdminSelect2Widget
 
@@ -144,3 +146,12 @@ class ProfileAdmin(NoBatchDeleteMixin, VersionAdmin):
                 mode='javascript', theme=request.profile.resolved_ace_theme,
             )
         return form
+
+
+class CustomUserAdmin(UserAdmin):
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        if not change:
+            profile = Profile(user=obj)
+            profile.language = Language.objects.get(key=settings.DEFAULT_USER_LANGUAGE)
+            profile.save()
