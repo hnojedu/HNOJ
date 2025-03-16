@@ -15,8 +15,11 @@
     border-top-left-radius: 6px;
     border-bottom-left-radius: 6px;
 
-    & > a {
-        color: #000;    // the user-link menu bar
+    & > .anon {
+        color: #eee;    // the user-link menu bar, anonymous user
+        a {
+            color: #fff
+        }
     }
 
     li {
@@ -115,14 +118,10 @@ nav {
             a, button {
                 text-decoration: none;
                 vertical-align: middle;
-                color: #fff;    // texts in menu bar
+                color: #eee;    // texts in menu bar
                 padding: 14px 7px;
                 height: 20px;
                 display: inline-table;
-
-                &:link {
-                    color: #000;    // links in menu bar
-                }
 
                 &:hover {
                     color: #fff;    // in menu bar when hovered
