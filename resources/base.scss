@@ -97,7 +97,7 @@ div.info-float {
 }
 
 footer {
-    color: $color_primary50;
+    color: #ccc;
     display: block;
     width: 100%;
     position: absolute;
@@ -111,7 +111,7 @@ body {
     font-size: $base_font_size;
     line-height: 1.231;
     background: $color_primary5;
-    font-family: "Segoe UI", "Lucida Grande", Arial, sans-serif;
+    font-family: "Mulish", "Segoe UI", "Lucida Grande", Arial, sans-serif;
     color: $color_primary100;
     height: 100%;
 }
@@ -176,7 +176,7 @@ footer {
     text-align: center;
     height: 40px;
     border-top: 1px solid $color_primary25;
-    background: $color_primary10;
+    background: #083474;
 }
 
 html {

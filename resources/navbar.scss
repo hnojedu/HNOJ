@@ -11,9 +11,12 @@
     min-height: 100%;
     align-items: center;
     white-space: nowrap;
+    background-color: #2e5895;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
 
-    a {
-        color: #FFF;
+    & > a {
+        color: #000;    // the user-link menu bar
     }
 
     li {
@@ -72,7 +75,7 @@
 }
 
 #nav-container {
-    background: #385E72;
+    background: #4899d2;    // menu bar background
 
     // opacity: 0.77
     // filter: alpha(opacity=77)
@@ -96,7 +99,8 @@ nav {
             color: #FFF;
             text-transform: uppercase;
             position: relative;
-            font-family: 'Source Sans Pro', sans-serif;
+            font-family: 'Mulish', 'Source Sans Pro', sans-serif;
+            font-weight: bold;
             &.home-nav-element a {
                 padding: 0;
                 height: 44px;
@@ -111,26 +115,26 @@ nav {
             a, button {
                 text-decoration: none;
                 vertical-align: middle;
-                color: #FFF;
+                color: #fff;    // texts in menu bar
                 padding: 14px 7px;
                 height: 20px;
                 display: inline-table;
 
                 &:link {
-                    color: #FFF;
+                    color: #000;    // links in menu bar
                 }
 
                 &:hover {
-                    color: #FFF;
+                    color: #fff;    // in menu bar when hovered
                     background: rgba(255, 255, 255, 0.25);
                     margin: 0;
                 }
 
                 &.active {
-                    color: #FFF;
+                    color: #fff;    // in menu bar when active
 
                     border: 5px solid transparent;
-                    border-bottom: 5px solid $highlight_blue;
+                    border-bottom: 5px solid #fff;
                     padding: 9px 2px;
                 }
 
@@ -145,14 +149,19 @@ nav {
                 left: 5px;
                 display: none;
                 color: #fff;
-                background: #231f20;
+                background: #231f20;   // the dropdown menu
                 margin: 0 !important;
                 box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
 
                 li {
                     a.active {
                         border: none;
-                        border-left: 5px solid $highlight_blue;
+                        border-left: 7px solid $highlight_blue; // active menu in dropdown menu
+                    }
+                    a:hover {
+                        color: #fff;    // in dropdown menu when hovered
+                        background: rgba(255, 255, 255, 0.25);
+                        margin: 0;
                     }
                 }
 
@@ -160,6 +169,7 @@ nav {
                     display: block;
 
                     a, button {
+                        color: #fff;    // in the links inside the dropdown menu
                         padding: 8px 20px 8px 8px !important;
                         font-size: 0.8em;
                         line-height: 18px;

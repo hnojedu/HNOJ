@@ -204,6 +204,9 @@
             }
         </style>
     </noscript>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
 </head>
 <body>
 <svg width="0" height="0" style="display: block">
@@ -240,7 +243,7 @@
                 {% else %}
                     "/tickets/new?issue_url={{ request.build_absolute_uri()|urlencode }}"
                 {% endif %}
-            style="margin-right: 5px;">
+            style="margin-right: 5px; margin-left: 20px;">
                 <span title="{{ _('Report issue') }}">
                     <i class="fa fa-exclamation-triangle" style="color: yellow;"></i>
                 </span>
@@ -343,8 +346,8 @@
     <footer>
         <span id="footer-content">
             <br>
-            {{_('proudly powered by %(dmoj)s', dmoj=safe('<a style="color: #808080" href="https://dmoj.ca"><b>DMOJ</b></a>'))}} |
-            {{_('follow us on %(github)s', github=safe('<a style="color: #808080" href="https://github.com/hnojedu/HNOJ"><b>Github</b></a>'))}}
+            {{_('proudly powered by %(dmoj)s', dmoj=safe('<a style="color: #ccc" href="https://dmoj.ca"><b>DMOJ</b></a>'))}} |
+            {{_('follow us on %(github)s', github=safe('<a style="color: #ccc" href="https://github.com/hnojedu/HNOJ"><b>Github</b></a>'))}}
             {% if misc_config.footer %}
                 {{ misc_config.footer|safe }} |
             {% endif %}
