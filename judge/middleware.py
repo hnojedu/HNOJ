@@ -2,15 +2,19 @@ import base64
 import hmac
 import re
 import struct
-from urllib.parse import quote
+from urllib.parse import quote, urlparse
 
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.cache import cache
+from django.core.exceptions import DisallowedHost
 from django.http import HttpResponse, HttpResponseRedirect
+from django.middleware.csrf import CsrfViewMiddleware, REASON_BAD_REFERER, REASON_INSECURE_REFERER, \
+    REASON_MALFORMED_REFERER, REASON_NO_REFERER
 from django.urls import Resolver404, resolve, reverse
 from django.utils.encoding import force_bytes
+from django.utils.http import is_same_domain
 from requests.exceptions import HTTPError
 
 from judge.models import MiscConfig
@@ -181,3 +185,80 @@ class MiscConfigMiddleware:
         domain = get_current_site(request).domain
         request.misc_config = MiscConfigDict(language=request.LANGUAGE_CODE, domain=domain)
         return self.get_response(request)
+
+
+class CustomCsrfViewMiddleware(CsrfViewMiddleware):
+    def process_view(self, request, callback, callback_args, callback_kwargs):
+        if getattr(request, 'csrf_processing_done', False):
+            return None
+
+        # Wait until request.META["CSRF_COOKIE"] has been manipulated before
+        # bailing out, so that get_token still works
+        if getattr(callback, 'csrf_exempt', False):
+            return None
+
+        if request.method not in ('GET', 'HEAD', 'OPTIONS', 'TRACE'):
+            if getattr(request, '_dont_enforce_csrf_checks', False):
+                # Mechanism to turn off CSRF checks for test suite.
+                # It comes after the creation of CSRF cookies, so that
+                # everything else continues to work exactly the same
+                # (e.g. cookies are sent, etc.), but before any
+                # branches that call reject().
+                return super()._accept(request)
+
+            if request.is_secure() or True:
+                # Suppose user visits http://example.com/
+                # An active network attacker (man-in-the-middle, MITM) sends a
+                # POST form that targets https://example.com/detonate-bomb/ and
+                # submits it via JavaScript.
+                #
+                # The attacker will need to provide a CSRF cookie and token, but
+                # that's no problem for a MITM and the session-independent
+                # secret we're using. So the MITM can circumvent the CSRF
+                # protection. This is true for any HTTP connection, but anyone
+                # using HTTPS expects better! For this reason, for
+                # https://example.com/ we need additional protection that treats
+                # http://example.com/ as completely untrusted. Under HTTPS,
+                # Barth et al. found that the Referer header is missing for
+                # same-domain requests in only about 0.2% of cases or less, so
+                # we can use strict Referer checking.
+                referer = request.META.get('HTTP_REFERER')
+                if referer is None:
+                    return super()._reject(request, REASON_NO_REFERER)
+
+                referer = urlparse(referer)
+
+                # Make sure we have a valid URL for Referer.
+                if '' in (referer.scheme, referer.netloc):
+                    return super()._reject(request, REASON_MALFORMED_REFERER)
+
+                # Ensure that our Referer is also secure.
+                if referer.scheme != 'https' and False:
+                    return super()._reject(request, REASON_INSECURE_REFERER)
+
+                # If there isn't a CSRF_COOKIE_DOMAIN, require an exact match
+                # match on host:port. If not, obey the cookie rules (or those
+                # for the session cookie, if CSRF_USE_SESSIONS).
+                good_referer = (
+                    settings.SESSION_COOKIE_DOMAIN
+                    if settings.CSRF_USE_SESSIONS
+                    else settings.CSRF_COOKIE_DOMAIN
+                )
+                if good_referer is not None:
+                    server_port = request.get_port()
+                    if server_port not in ('443', '80'):
+                        good_referer = '%s:%s' % (good_referer, server_port)
+                else:
+                    try:
+                        # request.get_host() includes the port.
+                        good_referer = request.get_host()
+                    except DisallowedHost:
+                        pass
+
+                # Create a list of all HTTP referer bypasses
+                good_hosts = list(settings.HNOJ_REFERER_CSRF_BYPASS)
+
+                if any(is_same_domain(referer.netloc, host) for host in good_hosts):
+                    reason = REASON_BAD_REFERER % referer.geturl()
+                    return super()._accept(request)
+        return super().process_view(request, callback, callback_args, callback_kwargs)
