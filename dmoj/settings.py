@@ -29,6 +29,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+HNOJ_REFERER_CSRF_BYPASS = []
+
 CSRF_FAILURE_VIEW = 'judge.views.widgets.csrf_failure'
 
 SITE_ID = 1
@@ -353,7 +355,7 @@ MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'judge.middleware.APIMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    'judge.middleware.CustomCsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'judge.middleware.MiscConfigMiddleware',
     'judge.middleware.DMOJLoginMiddleware',
