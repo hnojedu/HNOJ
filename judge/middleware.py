@@ -8,10 +8,8 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.cache import cache
-from django.core.exceptions import DisallowedHost
 from django.http import HttpResponse, HttpResponseRedirect
-from django.middleware.csrf import CsrfViewMiddleware, REASON_BAD_REFERER, REASON_INSECURE_REFERER, \
-    REASON_MALFORMED_REFERER, REASON_NO_REFERER
+from django.middleware.csrf import CsrfViewMiddleware
 from django.urls import Resolver404, resolve, reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import is_same_domain
@@ -237,3 +235,19 @@ class CustomCsrfViewMiddleware(CsrfViewMiddleware):
                             return super()._accept(request)
         # fallback to secure checks
         return super().process_view(request, callback, callback_args, callback_kwargs)
+
+
+def SetDefaultLangMiddleware(get_response):
+    def middleware(request):
+        # Code to be executed for each request before processing it
+
+        if not request.COOKIES.get('django_language'):  # Language not selected by the user ?
+            # Set your default language code here
+            request.COOKIES['django_language'] = settings.LANGUAGE_CODE
+
+        response = get_response(request)
+        # If you want to process anycode after the view is called
+
+        return response
+
+    return middleware
