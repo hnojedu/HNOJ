@@ -1,12 +1,19 @@
 import json
+import logging
 import socket
 import threading
 
 from django.conf import settings
-from websocket import WebSocketException, create_connection
+from websocket import WebSocketException, create_connection, setdefaulttimeout
 
 __all__ = ['EventPostingError', 'EventPoster', 'post', 'last']
 _local = threading.local()
+
+logger = logging.getLogger('judge.event_poster')
+
+# Set the default timeout to 5 seconds
+# Without this, create_connection will block the whole process indefinitely
+setdefaulttimeout(5)
 
 
 class EventPostingError(RuntimeError):
@@ -63,7 +70,8 @@ def _get_poster():
 def post(channel, message):
     try:
         return _get_poster().post(channel, message)
-    except (WebSocketException, socket.error):
+    except (WebSocketException, socket.error) as e:
+        logger.error(e, exc_info=True)
         try:
             del _local.poster
         except AttributeError:
@@ -74,7 +82,8 @@ def post(channel, message):
 def last():
     try:
         return _get_poster().last()
-    except (WebSocketException, socket.error):
+    except (WebSocketException, socket.error) as e:
+        logger.error(e, exc_info=True)
         try:
             del _local.poster
         except AttributeError:
