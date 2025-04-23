@@ -128,14 +128,18 @@ class Submission(models.Model):
         return self.locked_after is not None and self.locked_after < timezone.now()
 
     def judge(self, *args, rejudge=False, force_judge=False, rejudge_user=None, **kwargs):
-        if force_judge or not self.is_locked:
-            if rejudge:
-                with revisions.create_revision(manage_manually=True):
-                    if rejudge_user:
-                        revisions.set_user(rejudge_user)
-                    revisions.set_comment('Rejudged')
-                    revisions.add_to_revision(self)
-            judge_submission(self, *args, rejudge=rejudge, **kwargs)
+        if self.problem.allow_judging:
+            if force_judge or not self.is_locked:
+                if rejudge:
+                    with revisions.create_revision(manage_manually=True):
+                        if rejudge_user:
+                            revisions.set_user(rejudge_user)
+                        revisions.set_comment('Rejudged')
+                        revisions.add_to_revision(self)
+                judge_submission(self, *args, rejudge=rejudge, **kwargs)
+        else:
+            Submission.objects.filter(id=self.id).update(status='D', result='AB')
+            self.update_contest()
 
     judge.alters_data = True
 
@@ -243,7 +247,7 @@ class Submission(models.Model):
 class SubmissionSource(models.Model):
     submission = models.OneToOneField(Submission, on_delete=models.CASCADE, verbose_name=_('associated submission'),
                                       related_name='source')
-    source = models.TextField(verbose_name=_('source code'), max_length=65536)
+    source = models.TextField(verbose_name=_('source code'), max_length=4194304)
 
     def __str__(self):
         return _('Source of %(submission)s') % {'submission': self.submission}

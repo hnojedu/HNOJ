@@ -134,8 +134,8 @@
                 }).resize();
 
                 $('#problem_submit').submit(function (event) {
-                    if ($('#id_source').val().length > 65536) {
-                        alert("{{ _('Your source code must contain at most 65536 characters.') }}");
+                    if ($('#id_source').val().length > 4194304) {
+                        alert("{{ _('Your source code must contain at most 4194304 characters.') }}");
                         event.preventDefault();
                         $('#problem_submit').find(':submit').attr('disabled', false);
                     }

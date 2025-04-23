@@ -86,6 +86,7 @@
 
 #content-right {
     &.problems {
+        flex: 26.5%;
         max-width: unset;
         padding-top: 0;
     }
@@ -93,7 +94,7 @@
 
 #content-left {
     &.problems {
-        flex: 3;
+        flex: 73.5%;
     }
 }
 

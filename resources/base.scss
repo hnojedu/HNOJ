@@ -100,8 +100,8 @@ footer {
     color: gray;
     display: block;
     width: 100%;
-    position: absolute;
     bottom: 0;
+    position: relative !important;
 }
 
 body {
@@ -229,7 +229,7 @@ header {
 }
 
 #nav-container {
-    background: $widget_black;
+    background: $widget_blue;
 
     // opacity: 0.77
     // filter: alpha(opacity=77)
@@ -393,7 +393,7 @@ hr {
 
 footer {
     text-align: center;
-    height: 40px;
+    height: auto;
     border-top: 1px solid $border_gray;
     background: #ededed;
 }

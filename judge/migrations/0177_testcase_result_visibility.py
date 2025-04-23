@@ -32,4 +32,10 @@ class Migration(migrations.Migration):
             model_name='problem',
             name='allow_view_testcase_status',
         ),
+
+        migrations.AddField(
+            model_name='problem',
+            name='allow_judging',
+            field=models.BooleanField(default=True, help_text='If disabled, submissions will be stored but not judged.', verbose_name='allow judging'),
+        ),
     ]

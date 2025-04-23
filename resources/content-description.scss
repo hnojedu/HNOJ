@@ -18,7 +18,8 @@
     }
 
     #content-left {
-        flex: 5;
+        flex: 86%;
+        width: 100%;
 
         &.split-common-content {
             width: 70%;
@@ -30,8 +31,9 @@
     }
 
     #content-right {
-        flex: 1;
+        flex: 14%;
         max-width: 12.5em;
+        min-width: 8em;
         padding-left: 1.5em;
         padding-top: 1em;
 

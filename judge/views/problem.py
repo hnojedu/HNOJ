@@ -8,12 +8,14 @@ from operator import itemgetter
 from random import randrange
 
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import (LoginRequiredMixin,
+                                        PermissionRequiredMixin)
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.db import transaction
 from django.db.models import BooleanField, Case, F, Prefetch, Q, When
 from django.db.utils import ProgrammingError
-from django.http import Http404, HttpResponse, HttpResponseForbidden, HttpResponseRedirect
+from django.http import (Http404, HttpResponse, HttpResponseForbidden,
+                         HttpResponseRedirect)
 from django.shortcuts import get_object_or_404
 from django.template.loader import get_template
 from django.urls import reverse
@@ -21,28 +23,32 @@ from django.utils import timezone, translation
 from django.utils.functional import cached_property
 from django.utils.html import escape, format_html
 from django.utils.safestring import mark_safe
-from django.utils.translation import gettext as _, gettext_lazy
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 from django.views.generic import CreateView, ListView, UpdateView, View
 from django.views.generic.base import TemplateResponseMixin
 from django.views.generic.detail import SingleObjectMixin
-from reversion import revisions
-
 from judge.comments import CommentedDetailView
-from judge.forms import LanguageLimitFormSet, ProblemCloneForm, ProblemEditForm, ProblemSubmitForm, \
-    ProposeProblemSolutionFormSet
-from judge.models import ContestSubmission, Judge, Language, Problem, ProblemGroup, \
-    ProblemTranslation, ProblemType, RuntimeVersion, Solution, Submission, SubmissionSource
-from judge.pdf_problems import DefaultPdfMaker, HAS_PDF
+from judge.forms import (LanguageLimitFormSet, ProblemCloneForm,
+                         ProblemEditForm, ProblemSubmitForm,
+                         ProposeProblemSolutionFormSet)
+from judge.models import (ContestSubmission, Judge, Language, Problem,
+                          ProblemGroup, ProblemTranslation, ProblemType,
+                          RuntimeVersion, Solution, Submission,
+                          SubmissionSource)
+from judge.pdf_problems import HAS_PDF, DefaultPdfMaker
 from judge.tasks import on_new_problem
 from judge.template_context import misc_config
 from judge.utils.diggpaginator import DiggPaginator
 from judge.utils.opengraph import generate_opengraph
-from judge.utils.problems import hot_problems, user_attempted_ids, \
-    user_completed_ids
+from judge.utils.problems import (hot_problems, user_attempted_ids,
+                                  user_completed_ids)
 from judge.utils.strings import safe_float_or_none, safe_int_or_none
 from judge.utils.tickets import own_ticket_filter
-from judge.utils.views import QueryStringSortMixin, SingleObjectFormView, TitleMixin, add_file_response, generic_message
+from judge.utils.views import (QueryStringSortMixin, SingleObjectFormView,
+                               TitleMixin, add_file_response, generic_message)
 from judge.views.widgets import pdf_statement_uploader, submission_uploader
+from reversion import revisions
 
 recjk = re.compile(r'[\u2E80-\u2E99\u2E9B-\u2EF3\u2F00-\u2FD5\u3005\u3007\u3021-\u3029\u3038-\u303A\u303B\u3400-\u4DB5'
                    r'\u4E00-\u9FC3\uF900-\uFA2D\uFA30-\uFA6A\uFA70-\uFAD9\U00020000-\U0002A6D6\U0002F800-\U0002FA1D]')
@@ -677,14 +683,6 @@ class ProblemSubmit(LoginRequiredMixin, ProblemMixin, TitleMixin, SingleObjectFo
 
             submission_file = form.files.get('submission_file', None)
             if submission_file is not None:
-                if self.new_submission.language.key == 'SCRATCH':
-                    try:
-                        archive = zipfile.ZipFile(submission_file.file)
-                        submission_file.file = archive.open('project.json')
-                        submission_file.name = 'dummy.json'
-                    except (zipfile.BadZipFile, KeyError):
-                        pass
-
                 source_url = submission_uploader(
                     submission_file=submission_file,
                     problem_code=self.new_submission.problem.code,

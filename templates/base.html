@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
-    <title>{% block title %}{{ title }} - {{ SITE_LONG_NAME }}{% endblock %}</title>
+    <title>Hội thi Tin học trẻ toàn quốc</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     {% if misc_config.meta_keywords %}
         <meta name="keywords" content="{{ misc_config.meta_keywords }}">
@@ -20,10 +20,10 @@
     <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
     <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
-    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/android-chrome-192x192.png" sizes="192x192">
-    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
-    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="{{ static('icons/Savio.png') }}" sizes="32x32">
+    <link rel="icon" type="image/png" href="{{ static('icons/Savio.png') }}" sizes="192x192">
+    <link rel="icon" type="image/png" href="{{ static('icons/Savio.png') }}" sizes="96x96">
+    <link rel="icon" type="image/png" href="{{ static('icons/Savio.png') }}" sizes="16x16">
     <link rel="manifest" href="/manifest.json">
     <meta name="msapplication-TileColor" content="#231F20">
     <meta name="msapplication-TileImage" content="/mstile-144x144.png">
@@ -200,6 +200,15 @@
             #navigation {
                 top: 27px;
             }
+            #footer-content {
+                text-align: center;
+                color: #908384;
+                background-color: #ededed;
+                padding: 16px 0px;
+            }
+            .footer-info {
+            margin: 16px 0px;
+            }
         </style>
     </noscript>
     <!-- Facebook Pixel Code -->
@@ -357,19 +366,24 @@
     {% block bodyend %}{% endblock %}
 
     <footer>
-        <span id="footer-content">
-            <br>
-            {{_('proudly powered by %(dmoj)s', dmoj=safe('<a style="color: #808080" href="https://dmoj.ca"><b>DMOJ</b></a>'))}} |
-            {{_('follow us on %(github)s and %(facebook)s', github=safe('<a style="color: #808080" href="https://github.com/VNOI-Admin/OJ"><b>Github</b></a>'), facebook=safe('<a style="color: #808080" href="https://www.facebook.com/vnoi.wiki"><b>Facebook</b></a>'))}}
-            {% if i18n_config.footer %}
-                {{ i18n_config.footer|safe }} |
-            {% endif %}
-            <form id="set_language" action="{{ url('set_language') }}" method="post" style="display: inline">
-                {% csrf_token %}
-            <input name="next" type="hidden" value="{{ request.get_full_path() }}">
-            <input name="language" type="hidden" value="{{LANGUAGE_CODE}}">
-          </form>
-        </span>
+        <div style="text-align: center; color: #908384; background-color: #ededed; padding: 16px 0px;" id="footer-content">
+            THƯỜNG TRỰC BAN TỔ CHỨC<br/>
+            <b>TRUNG TÂM PHÁT TRIỂN KHOA HỌC, CÔNG NGHỆ VÀ TÀI NĂNG TRẺ<br/>
+            Center for Vietnam Young Talents, Science and Technology (CYTAST)<br/></b>
+            <div style="margin: 16px 0px;">
+              Địa chỉ: Số 7 Xã Đàn - Đống Đa - Hà Nội<br/>
+              ĐT: (024) 3577 2353<br/>
+              Website: http://tainangviet.vn<br/>
+              Email: tainangviet.twd@gmail.com<br/>
+              Hotline: 0344 268 982 (Đ/c Trung)<br/>
+            </div>
+            <i>Hệ thống được hỗ trợ phát triển bởi: Cộng đồng Olympic Tin học Việt Nam (VNOI)<br/></i>
+        </div>
+        <form id="set_language" action="{{ url('set_language') }}" method="post" style="display: inline">
+            {% csrf_token %}
+        <input name="next" type="hidden" value="{{ request.get_full_path() }}">
+        <input name="language" type="hidden" value="{{LANGUAGE_CODE}}">
+      </form>
     </footer>
 </div>
 </body>

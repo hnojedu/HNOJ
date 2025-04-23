@@ -4301,7 +4301,7 @@ msgstr ""
 
 #: judge/views/widgets.py:133
 msgid ""
-"This error should not happend in normal operation. Mostly this is because we "
+"This error should not happen in normal operation. Mostly this is because we "
 "are under a DDOS attack and we need to raise our shield to protect the site "
 "from the attack.\n"
 "\n"
@@ -6032,7 +6032,7 @@ msgid "Diff source code"
 msgstr ""
 
 #: templates/problem/submit.html:138
-msgid "Your source code must contain at most 65536 characters."
+msgid "Your source code must contain at most 4194304 characters."
 msgstr ""
 
 #: templates/problem/submit.html:160

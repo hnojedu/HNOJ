@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
             name='SubmissionSource',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('source', models.TextField(max_length=65536, verbose_name='source code')),
+                ('source', models.TextField(max_length=4194304, verbose_name='source code')),
                 ('submission', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='link', to='judge.Submission', verbose_name='associated submission')),
             ],
         ),
