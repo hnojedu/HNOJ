@@ -1219,7 +1219,10 @@ class ContestListByTag(ContestList):
             queryset = queryset.filter(**{self.slug_field: slug})
         else:
             raise ImproperlyConfigured('ContestTagDetail requires tag name')
-        return queryset.get()
+        try:
+            return queryset.get()
+        except ContestTag.DoesNotExist:
+            raise Http404()
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
