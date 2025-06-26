@@ -457,8 +457,8 @@ urlpatterns = [
     ])),
 ]
 
-favicon_paths = ['apple-touch-icon.png', 'favicon-96x96.png', 'favicon.ico', 'favicon.svg',
-                 'manifest.json', 'web-app-manifest-192x192.png', 'web-app-manifest-512x512.png']
+favicon_paths = ['apple-touch-icon.png', 'favicon-96x96.png', 'favicon.ico', 'favicon.svg', 'manifest.json',
+                 'opengraph.png', 'web-app-manifest-192x192.png', 'web-app-manifest-512x512.png']
 
 static_lazy = lazy(static, str)
 for favicon in favicon_paths:
