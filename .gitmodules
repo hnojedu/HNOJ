@@ -2,3 +2,6 @@
 	path = resources/libs
 	url = https://github.com/DMOJ/site-assets.git
 	branch = master
+[submodule "resources/vnoj/mathjax/3.2.2"]
+	path = resources/vnoj/mathjax/3.2.2
+	url = https://github.com/mathjax/MathJax.git
