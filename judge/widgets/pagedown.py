@@ -45,7 +45,7 @@ else:
         class Media:
             js = [
                 'mathjax_config.js',
-                'vnoj/mathjax/3.2.0/es5/tex-chtml.min.js',
+                'vnoj/mathjax/3.2.2/es5/tex-chtml.js',
                 'pagedown_math.js',
             ]
 
