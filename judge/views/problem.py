@@ -704,10 +704,11 @@ class ProblemSubmit(LoginRequiredMixin, ProblemMixin, TitleMixin, SingleObjectFo
             # I didn't log the timestamp here because
             # the logger can handle it.
             user_submit_ip_logger.info(
-                '%s,%s,%s',
+                '%s,%s,%s,%d',
                 self.request.user.username,
                 ip,
                 self.new_submission.problem.code,
+                self.new_submission.id,
             )
 
         return super().form_valid(form)
