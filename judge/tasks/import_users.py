@@ -90,6 +90,9 @@ def import_users(users):
         if row['email']:
             user.email = row['email']
 
+        # reset number of sessions
+        profile.sessions = 0
+
         user.save()
         profile.save()
         cur_log += 'Saved\n'

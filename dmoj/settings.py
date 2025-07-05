@@ -651,6 +651,9 @@ USE_TZ = True
 # Cookies
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
+# Maximum number of sessions a user can have at the same time.
+HNOJ_MAX_SESSIONS = 1000000000
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
