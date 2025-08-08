@@ -27,7 +27,7 @@
                     {% block user_name_display scoped %} {{ link_user(user) }} {% endblock %}
                     <div class="personal-info">
                         {% block personal_info_display scoped %}
-                            <span style="font-weight: 600; color: gray;">{{ user.user.first_name }}</span>
+                            <span style="font-weight: 600; color: gray;">{{ user.user.first_name }} {{ user.user.last_name }}</span>
                         {% endblock %}
                     </div>
                 </div>
