@@ -49,6 +49,8 @@ def get_submission_file_url(source):
         URL_VALIDATOR(source)
         return source
     except ValidationError:
+        if settings.INTERNAL_SITE_FULL_URL:
+            return urllib.parse.urljoin(settings.INTERNAL_SITE_FULL_URL, source)
         return urllib.parse.urljoin(settings.SITE_FULL_URL, source)
 
 

@@ -162,6 +162,7 @@ DISCORD_WEBHOOK = {
 }
 
 SITE_FULL_URL = None  # ie 'https://oj.vnoi.info', please remove the last / if needed
+INTERNAL_SITE_FULL_URL = None   # the same as SITE_FULL_URL, intended for judges
 
 NODEJS = '/usr/bin/node'
 EXIFTOOL = '/usr/bin/exiftool'
