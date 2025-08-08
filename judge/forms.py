@@ -435,7 +435,7 @@ class CustomAuthenticationForm(AuthenticationForm):
                 code='banned',
             )
         if not settings.HNOJ_ALLOW_NULL_SESSION_COUNT and not user.is_staff and user.profile.sessions is None:
-            raise forms.ValidationError(_('Login temporarily disabled.'))
+            raise forms.ValidationError(settings.HNOJ_DENY_RESPONSE_TEXT)
         if (not user.is_staff and user.profile.sessions is not None
             and user.profile.sessions >= settings.HNOJ_MAX_SESSIONS):
             raise forms.ValidationError(

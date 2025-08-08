@@ -657,6 +657,7 @@ HNOJ_MAX_SESSIONS = 1000000000
 
 # Allow user with null session count to auth
 HNOJ_ALLOW_NULL_SESSION_COUNT = True
+HNOJ_DENY_RESPONSE_TEXT = _('Login temporarily disabled')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
