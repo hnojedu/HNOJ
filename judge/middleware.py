@@ -5,6 +5,7 @@ import struct
 from urllib.parse import quote
 
 from django.conf import settings
+from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.urls import Resolver404, resolve, reverse
@@ -43,6 +44,7 @@ class DMOJLoginMiddleware(object):
             change_password_done_path = reverse('password_change_done')
             has_2fa = profile.is_totp_enabled or profile.is_webauthn_enabled
             if not settings.HNOJ_ALLOW_NULL_SESSION_COUNT and not request.user.is_staff and profile.sessions is None:
+                auth_logout(request)
                 return HttpResponseForbidden(settings.HNOJ_DENY_RESPONSE_TEXT)
             if (has_2fa and not request.session.get('2fa_passed', False) and
                     request.path not in (login_2fa_path, logout_path, webauthn_path) and
