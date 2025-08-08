@@ -190,7 +190,7 @@ class Profile(models.Model):
     data_last_downloaded = models.DateTimeField(verbose_name=_('last data download time'), null=True, blank=True)
     username_display_override = models.CharField(max_length=100, blank=True, verbose_name=_('display name override'),
                                                  help_text=_('Name displayed in place of username'))
-    sessions = models.IntegerField(default=0, verbose_name=_('number of sessions'),
+    sessions = models.IntegerField(null=True, verbose_name=_('number of sessions'),
                                   help_text=_('Number of times this user has logged in to the site.'))
 
     @cached_property

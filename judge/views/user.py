@@ -169,7 +169,7 @@ class CustomLoginView(LoginView):
         else:
             self.request.session['password_pwned'] = False
         user = User.objects.get(username=form.cleaned_data['username'])
-        if not user.is_staff:
+        if not user.is_staff and user.profile.sessions is not None:
             user.profile.sessions += 1
             user.profile.save(update_fields=['sessions'])
         return super().form_valid(form)

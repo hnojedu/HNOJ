@@ -434,7 +434,10 @@ class CustomAuthenticationForm(AuthenticationForm):
                 _('This account has been banned. Reason: %s') % user.profile.ban_reason,
                 code='banned',
             )
-        if not user.is_staff and user.profile.sessions >= settings.HNOJ_MAX_SESSIONS:
+        if not settings.HNOJ_ALLOW_NULL_SESSION_COUNT and not user.is_staff and user.profile.sessions is None:
+            raise forms.ValidationError(_('Login temporarily disabled.'))
+        if (not user.is_staff and user.profile.sessions is not None
+            and user.profile.sessions >= settings.HNOJ_MAX_SESSIONS):
             raise forms.ValidationError(
                 _('You have reached the maximum number of sessions.'),
                 code='max_sessions_reached',
