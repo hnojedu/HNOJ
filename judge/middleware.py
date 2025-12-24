@@ -36,6 +36,18 @@ class ShortCircuitMiddleware:
         return self.get_response(request)
 
 
+class HNOJProfileMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if request.user.is_authenticated:
+            request.profile = request.user.profile
+        else:
+            request.profile = None
+        return self.get_response(request)
+
+
 class DMOJLoginMiddleware(object):
     def __init__(self, get_response):
         self.get_response = get_response

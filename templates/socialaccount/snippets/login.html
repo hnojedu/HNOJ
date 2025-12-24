@@ -1,0 +1,10 @@
+{% with socialaccount_providers=get_providers %}
+    {% if not SOCIALACCOUNT_ONLY %}
+        <hr>
+        <h2>{{ _('Or log in with...') }}</h2>
+    {% endif %}
+    {% with process='login', scope='', auth_params='' %}
+        {% include "socialaccount/snippets/provider_list.html" %}
+    {% endwith %}
+    {{ providers_media_js() }}
+{% endwith %}

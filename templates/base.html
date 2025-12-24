@@ -269,7 +269,7 @@
                                 <li><a href="{{ url('impersonate-stop') }}">{{ _('Stop impersonating') }}</a></li>
                             {% else %}
                                 <li>
-                                    <form action="{{ url('auth_logout') }}" method="POST">
+                                    <form action="{{ url('account_logout') }}" method="POST">
                                         {% csrf_token %}
                                         <button type="submit">{{ _('Log out') }}</button>
                                     </form>
@@ -280,9 +280,9 @@
                 </ul>
             {% else %}
                 <span class="anon">
-                    <a href="{{ url('auth_login') }}?next={{ LOGIN_RETURN_PATH|urlencode }}"><b>{{ _('Log in') }}</b></a>
+                    <a href="{{ url('account_login') }}?next={{ LOGIN_RETURN_PATH|urlencode }}"><b>{{ _('Log in') }}</b></a>
                     &nbsp;{{ _('or') }}&nbsp;
-                    <a href="{{ url('registration_register') }}"><b>{{ _('Sign up') }}</b></a>
+                    <a href="{{ url('account_signup') }}"><b>{{ _('Sign up') }}</b></a>
                 </span>
             {% endif %}
         </span>
